@@ -1,0 +1,16 @@
+[
+{
+  "modid": "imeautochange",
+  "name": "IME Auto Change",
+  "description": "Automatically changes IME for easier chat.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["IMXZ"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
