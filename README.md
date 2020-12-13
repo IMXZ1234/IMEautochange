@@ -7,7 +7,7 @@ Windows APIs are used in realizing the functions so this mod only works under Wi
 
 This is a client-sided mod, and therefore not required on server.
 
-For Minecraft 1.12
+For Minecraft 1.12.2
 
 Currently supports:
 
