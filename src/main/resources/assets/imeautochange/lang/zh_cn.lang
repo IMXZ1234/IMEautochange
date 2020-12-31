@@ -1,0 +1,19 @@
+key.imeautochange.toggleJEISupport=开启\关闭对JEI搜索框的支持
+key.imeautochange.openchatwithIMEtoggled=开启聊天栏并切换输入法
+key.categories.imeautochange=输入法自动切换
+
+config.imeautochange.general=输入法自动切换设置
+config.imeautochange.general.keyboardLayoutInGame=游戏中使用的输入法
+config.imeautochange.general.keyboardLayoutInGui=切换的输入法
+config.imeautochange.general.isFunctionEnabledGuiSign=编辑公告牌时启用切换
+config.imeautochange.general.isFunctionEnabledGuiScreenBook=编辑书本时启用切换
+config.imeautochange.general.isFunctionEnabledGuiRepair=铁砧中重命名物品时启用切换
+config.imeautochange.general.isFunctionEnabledGuiContainerCreative=创造模式背包搜索物品时启用切换
+config.imeautochange.general.isFunctionEnabledJEISupport=JEI搜索框搜索时启用切换
+
+text.imeautochange.warningKLInGameNotInstalled=IMEautochange: 游戏中使用的IME未安装，功能关闭
+text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: 切换的IME未安装，功能关闭
+text.imeautochange.warningKLInGameNotSupported=IMEautochange: 游戏中使用的IME不为本模组支持，功能关闭
+text.imeautochange.warningKLInGuiNotSupported=IMEautochange: 切换的IME不为本模组支持，功能关闭
+text.imeautochange.warningKLInGameInstalled=IMEautochange: 检测到新安装了游戏中使用的IME，功能开启
+text.imeautochange.warningKLInGuiInstalled=IMEautochange: 检测到新安装了切换的IME，功能开启
