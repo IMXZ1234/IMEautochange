@@ -19,5 +19,6 @@ Languages and their corresponding string:
 | Chinese Traditional  | zh_tw |
 | English  | en_us |
 | Japanese  | ja_jp |
-| Korean  | ko_kr |  
-For Any trouble using this mod, acknowledge my in [github issue](https://github.com/IMXZ1234/IMEautochange/issues) or in [mcbbs page](https://www.mcbbs.net/thread-1143321-1-1.html)
+| Korean  | ko_kr |
+
+For Any trouble using this mod, acknowledge me in [github issue](https://github.com/IMXZ1234/IMEautochange/issues) or in [mcbbs page](https://www.mcbbs.net/thread-1143321-1-1.html)
