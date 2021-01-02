@@ -3,6 +3,8 @@ package com.IMEautochange.config;
 import java.util.Collections;
 import java.util.Set;
 
+import com.IMEautochange.IMEautochange;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
@@ -22,7 +24,7 @@ public class ModConfigGuiFactory implements IModGuiFactory {
 
     @Override
     public GuiScreen createConfigGui(GuiScreen parent) {
-        return new GuiConfig(parent, ConfigElement.from(ModConfig.class).getChildElements(), "my_mod_id", false, false, "First line", "Second line");
+        return new GuiConfig(parent, ConfigElement.from(ModConfig.class).getChildElements(), IMEautochange.MODID, false, false, "First line", "General");
     }
 
     @Override

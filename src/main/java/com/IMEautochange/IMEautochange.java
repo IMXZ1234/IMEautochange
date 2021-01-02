@@ -26,7 +26,7 @@ public class IMEautochange
 {
     public static final String MODID = "imeautochange";
     public static final String NAME = "IME Auto Change";
-    public static final String VERSION = "1.2.0";
+    public static final String VERSION = "1.2.1";
     
     public static Logger logger;
 

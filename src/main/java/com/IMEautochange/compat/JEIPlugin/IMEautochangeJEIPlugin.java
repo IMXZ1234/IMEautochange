@@ -38,7 +38,6 @@ import mezz.jei.api.IIngredientListOverlay;
 
 @JEIPlugin
 public class IMEautochangeJEIPlugin implements IModPlugin {
-	private static final Logger LOGGER = LogManager.getLogger();
 	static IIngredientListOverlay IngredientListOverlay;
 //	static GuiScreen IngredientListOverlayGui;
 //	static boolean isMouseClicked = true;
@@ -48,7 +47,7 @@ public class IMEautochangeJEIPlugin implements IModPlugin {
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 		if (OSChecker.isWindows()) {
-			LOGGER.info("JEI support is available.");
+			IMEautochange.logger.info("JEI support is available.");
 			this.IngredientListOverlay = jeiRuntime.getIngredientListOverlay();
 			MinecraftForge.EVENT_BUS.register(this);
 		}

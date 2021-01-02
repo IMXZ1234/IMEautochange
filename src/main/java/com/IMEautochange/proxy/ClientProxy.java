@@ -3,6 +3,7 @@ package com.IMEautochange.proxy;
 //import org.codehaus.plexus.util.Os;
 
 import com.IMEautochange.IMEautochange;
+import com.IMEautochange.event.ModClientEventHandler;
 import com.IMEautochange.key.ModKeys;
 import com.IMEautochange.proxy.CommonProxy;
 import com.IMEautochange.util.OSChecker;
@@ -29,19 +30,18 @@ public class ClientProxy extends CommonProxy
     @Override
     public void init(FMLInitializationEvent event)
     {
-    	System.out.println("IMEautochange start initializing.");
+    	IMEautochange.logger.info("IMEautochange start initializing.");
         super.init(event);
         //Since Windows native methods is used, this mod only works under Windows.
         if(OSChecker.isWindows())
         {
-        	System.out.println("OS is Windows, main features enabled.");
-//        	IMEautochange.logger.debug("OS is Windows, main features enabled.");
+        	IMEautochange.logger.info("OS is Windows, main features enabled.");
         	ModKeys.registerKeys();
+        	ModClientEventHandler.register();
         }
         else
         {
-        	System.out.println("Current OS is not supprted, all features disabled.");
-//        	IMEautochange.logger.debug("Current OS is not supprted, all features disabled.");
+        	IMEautochange.logger.info("Current OS is not supprted, all features disabled.");
         }
     }
 

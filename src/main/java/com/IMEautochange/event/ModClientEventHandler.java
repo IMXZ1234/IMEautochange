@@ -38,11 +38,12 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 
 
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+//@Mod.EventBusSubscriber(Side.CLIENT)
 public class ModClientEventHandler {
 	
 	static final String GuiRepairGuiTextFieldName = "field_147091_w";
@@ -52,6 +53,11 @@ public class ModClientEventHandler {
 	static boolean isGuiRepairGuiTextFieldFocused = false;
 	static boolean isGuiContainerCreativeGuiTextFieldFocused = false;
 	static boolean isGuiOpenInGuiRepairPossible = false;
+	
+	public static void register() 
+	{
+		MinecraftForge.EVENT_BUS.register(ModClientEventHandler.class);
+	}
 	
 	/**
 	 * If registered hotkey(open chat with IME toggled) is pressed, change keyboard layout to keyboardLayoutInGui
@@ -64,8 +70,6 @@ public class ModClientEventHandler {
     {
         if (ModKeys.openChat.isPressed())
         {
-        	System.out.println("openchat pressed!");
-        	//ModNativeMethods.ToggleIME();
         	IMEChangeManager.switchKL(false);
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
 		}
