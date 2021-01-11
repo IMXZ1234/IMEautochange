@@ -17,6 +17,10 @@ public class IMEChangeManager
 	private static boolean hasKLInGui;
 	private static long[] hKLList;
 	private static int hKLnum;
+	/**
+	 * Note that manually switching IME will not cause this flag to flip.
+	 */
+	public static boolean isKLInGame = true;
 	
 	
 	static {
@@ -167,6 +171,7 @@ public class IMEChangeManager
 			if (hasKLInGame)
 			{
 				ModNativeMethods.activateKL(hKLInGame);
+				isKLInGame = true;
 				return true;
 			}
 			else
@@ -179,6 +184,7 @@ public class IMEChangeManager
 			if (hasKLInGui)
 			{
 				ModNativeMethods.activateKL(hKLInGui);
+				isKLInGame = false;
 				return true;
 			}
 			else

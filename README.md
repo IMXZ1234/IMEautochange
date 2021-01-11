@@ -1,6 +1,6 @@
 # IME Auto Change
 Switch Input Method Editor(IME) automatically during gameplay.  
-Finally solving the problem long hauting Asian Minecraft players.
+Finally solving the problem long haunting Asian Minecraft players.
 ## Now Supports
 * JEI Search Box  
 * In Game ChatLine  
@@ -8,6 +8,8 @@ Finally solving the problem long hauting Asian Minecraft players.
 * Book Editing  
 * Anvil Renaming  
 * Creative Tab Searching  
+* Patchouli Book Searching
+* Botania Lexicon Searching
 # Usage
 In game, press <kbd>Enter</kbd>*(default)* to open chat with IME toggled. Note that vanilla OpenChat HotKey <kbd>T</kbd>*(default)* is still available.  
 Other functions are enabled once installed, and can be configured in ***Mod Option***. Changed configuration takes effect immediately.  

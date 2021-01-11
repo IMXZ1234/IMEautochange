@@ -6,7 +6,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-public class ModKeys {
+public class ModKeys 
+{
 	public static KeyBinding openChat;
 	public static KeyBinding toggleJEISupport;
 

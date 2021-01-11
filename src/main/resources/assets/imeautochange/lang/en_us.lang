@@ -10,6 +10,8 @@ config.imeautochange.general.isFunctionEnabledGuiScreenBook=Function Editing Boo
 config.imeautochange.general.isFunctionEnabledGuiRepair=Function Anvil Renaming
 config.imeautochange.general.isFunctionEnabledGuiContainerCreative=Function Creative Tab searching
 config.imeautochange.general.isFunctionEnabledJEISupport=Function JEI Search Box Support
+config.imeautochange.general.isFunctionEnabledPatchouliSupport=Function Patchouli Book Search Box Support
+config.imeautochange.general.isFunctionEnabledBotaniaSupport=Function Botania Lexicon Search Box Support
 
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: IME in game is not installed, function disabled.
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: IME to Switch to is not installed, function disabled.

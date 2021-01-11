@@ -1,5 +1,8 @@
 package com.IMEautochange.event;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -18,6 +21,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiEditSign;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ChatType;
@@ -44,20 +48,32 @@ import net.minecraftforge.common.config.Config;
 
 
 //@Mod.EventBusSubscriber(Side.CLIENT)
-public class ModClientEventHandler {
-	
+public class ModClientEventHandler 
+{
 	static final String GuiRepairGuiTextFieldName = "field_147091_w";
 	static final String GuiContainerCreativeGuiTextFieldName = "field_147062_A";
+//	static final String GuiContainerCreativeSelectedTabIndexName = "field_147058_w";
+	static final String GuiContainerCreativeTabPageName = "tabPage";
+	static final String GuiContainerCreativeIsMouseOverTabName = "func_147049_a";
+
 //	static final String GuiRepairGuiTextFieldName = "nameField";
 //	static final String GuiContainerCreativeGuiTextFieldName = "searchField";
-	static boolean isGuiRepairGuiTextFieldFocused = false;
-	static boolean isGuiContainerCreativeGuiTextFieldFocused = false;
+////	static final String GuiContainerCreativeSelectedTabIndexName = "selectedTabIndex";
+//	static final String GuiContainerCreativeTabPageName = "tabPage";
+//	static final String GuiContainerCreativeIsMouseOverTabName = "isMouseOverTab";
+	
+//	static boolean isGuiRepairGuiTextFieldFocused = false;
+//	static boolean isGuiContainerCreativeGuiTextFieldFocused = false;
 	static boolean isGuiOpenInGuiRepairPossible = false;
 	
 	public static void register() 
 	{
 		MinecraftForge.EVENT_BUS.register(ModClientEventHandler.class);
 	}
+	
+	// ================================================================================================
+	// Chat
+	// ================================================================================================
 	
 	/**
 	 * If registered hotkey(open chat with IME toggled) is pressed, change keyboard layout to keyboardLayoutInGui
@@ -74,30 +90,10 @@ public class ModClientEventHandler {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
 		}
     }
-//	/**
-//	 * If chat gui is close, either by pressing enter or esc in chat gui screen, change keyboard layout to keyboardLayoutInGame
-//	 * @param event
-//	 */
-//	//Chat gui is closed
-//	@SideOnly(Side.CLIENT)
-//	@SubscribeEvent//(priority = EventPriority.HIGHEST)
-//	public static void onGuiChatKeyboardInputEvent(KeyboardInputEvent.Pre event)
-//	{
-//		if(Minecraft.getMinecraft().currentScreen instanceof GuiChat) {
-////			if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-////				System.out.println("chat close by esc!");
-////				//ModNativeMethods.ToggleIME();
-////				ModNativeMethods.SetKLen_us();
-////			}else if(Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
-////				System.out.println("chat close by esc!");
-////				ModNativeMethods.SetKLen_us();
-////			}
-//			if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
-//				IMEChangeManager.switchKL(true);
-//			}
-//		}
-//	}
 	
+	// ================================================================================================
+	// Sign Edit
+	// ================================================================================================
 	
 	@SubscribeEvent
     public static void onGuiSignOpenEvent(GuiOpenEvent event)
@@ -110,18 +106,26 @@ public class ModClientEventHandler {
 	        }
 		}
     }
+    
+	// ================================================================================================
+	// Book Editing
+	// ================================================================================================
 	
-	//Config is changed
     @SubscribeEvent
-    public static void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) 
+    public static void onGuiScreenBookOpenEvent(GuiOpenEvent event)
     {
-        if (event.getModID().equals(IMEautochange.MODID)) 
-        {
-            ConfigManager.sync(IMEautochange.MODID, Config.Type.INSTANCE);
-            IMEChangeManager.sethKLInGame(ModConfig.keyboardLayoutInGame, false);
-            IMEChangeManager.sethKLInGui(ModConfig.keyboardLayoutInGui, false);
-        }
+    	if (ModConfig.isFunctionEnabledGuiScreenBook)
+    	{
+	        if (event.getGui() instanceof GuiScreenBook)
+	        {
+	        	IMEChangeManager.switchKL(false);
+	        }
+    	}
     }
+    
+	// ================================================================================================
+	// Anvil Rename
+	// ================================================================================================
 	
     @SubscribeEvent
     public static void onGuiRepairClientTickEvent(ClientTickEvent event) throws NoSuchFieldException, IllegalAccessException 
@@ -131,24 +135,23 @@ public class ModClientEventHandler {
     		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
 	    	if (guiScreen instanceof GuiRepair)
 	    	{
-	//    		guiScreen = (GuiRepair) guiScreen;
 	            GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiRepair.class, GuiRepairGuiTextFieldName, guiScreen);
-	            if (isGuiRepairGuiTextFieldFocused && !guiRepairTextField.isFocused())
+	            if (!IMEChangeManager.isKLInGame && !guiRepairTextField.isFocused())
 	            {
 	                IMEChangeManager.switchKL(true);
-	                isGuiRepairGuiTextFieldFocused = false;
 	                isGuiOpenInGuiRepairPossible = false;
 	            }
-	            else if (!isGuiRepairGuiTextFieldFocused && guiRepairTextField.isFocused())
+	            else if (IMEChangeManager.isKLInGame && guiRepairTextField.isFocused())
 	            {
 	            	IMEChangeManager.switchKL(false);
-	            	isGuiRepairGuiTextFieldFocused = true;
 	            }
 	        }
     	}
     }
     /**
-     * Fix GuiTextField in GuiRepair not losing focus when opening other Gui through mouse click
+     * Fix GuiTextField in GuiRepair not losing focus when opening other Gui through mouse click.
+     * This is because MinecraftForge gets Event Listeners added by other mods informed of mouse input before 
+     * vanilla logic is performed.
      * @param event
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
@@ -160,8 +163,7 @@ public class ModClientEventHandler {
     	if (event.getGui() != null)
         {
     		/* other Gui opened in GuiRepair
-    		 * may be JEI Gui, etc
-    		 */
+    		 * may be JEI Gui(most likely), etc*/
     		if (isGuiOpenInGuiRepairPossible) 
     		{
     			IMEChangeManager.switchKL(true);
@@ -179,7 +181,7 @@ public class ModClientEventHandler {
 	    	if (guiScreen instanceof GuiRepair)
 	    	{
 	    		 /*if mouse left button down*/
-		       	 if (Mouse.isButtonDown(0) && isGuiRepairGuiTextFieldFocused)
+		       	 if (Mouse.isButtonDown(0) && !IMEChangeManager.isKLInGame)
 		       	 {
 		       		isGuiOpenInGuiRepairPossible = true;
 		       	 }
@@ -187,130 +189,217 @@ public class ModClientEventHandler {
     	}
     }
     
-    
-    @SubscribeEvent
-    public static void onGuiContainerCreativeClientTickEvent(ClientTickEvent event) throws NoSuchFieldException, IllegalAccessException 
-    {
-    	if (ModConfig.isFunctionEnabledGuiContainerCreative) 
-    	{
-    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
-	     	if (guiScreen instanceof GuiContainerCreative)
-	     	{
-	             GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
-	             if (isGuiContainerCreativeGuiTextFieldFocused && !guiRepairTextField.isFocused())
-	             {
-	                 IMEChangeManager.switchKL(true);
-	                 isGuiContainerCreativeGuiTextFieldFocused = false;
-	             }
-	             else if (!isGuiContainerCreativeGuiTextFieldFocused && guiRepairTextField.isFocused())
-	             {
-	             	IMEChangeManager.switchKL(false);
-	             	isGuiContainerCreativeGuiTextFieldFocused = true;
-	             }
-	         }
-    	}
-    }
-    
-    /**
-     * 
-     */
-    
-//    /**
-//     * If mouse is clicked outside the GuiTextField in GuiContainerCreative,
-//     * switch IME to language in game
-//     * @param event
-//     * @throws NoSuchFieldException
-//     * @throws IllegalAccessException
-//     */
+	// ================================================================================================
+	// Creative Tab Searching
+	// ================================================================================================
+	
 //    @SubscribeEvent
-//    public static void onGuiContainerCreativeMouseInputEvent(GuiScreenEvent.MouseInputEvent.Pre event) throws NoSuchFieldException, IllegalAccessException 
+//    public static void onGuiContainerCreativeClientTickEvent(ClientTickEvent event) throws NoSuchFieldException, IllegalAccessException 
 //    {
 //    	if (ModConfig.isFunctionEnabledGuiContainerCreative) 
 //    	{
-//    		GuiScreen guiScreen = event.getGui();
+//    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
 //	     	if (guiScreen instanceof GuiContainerCreative)
 //	     	{
 //	             GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
-//	             /*if GuiTextField is focused, in other word, if in the search page of GuiContainerCreative.*/
-//	             if (isGuiContainerCreativeGuiTextFieldFocused && guiRepairTextField.isFocused())
+//	             if (!IMEChangeManager.isKLInGame && !guiRepairTextField.isFocused())
 //	             {
-//	            	 System.out.println("mouse input");
-//	            	 /*if mouse left button down*/
-//	            	 if (Mouse.isButtonDown(0))
-//	            	 {
-//	            		 System.out.println("button down");
-//	            		 int mouseX = Mouse.getX();
-//	            		 int mouseY = Mouse.getY();
-//	            		 System.out.println(mouseX);
-//	            		 System.out.println(mouseY);
-//	            		 System.out.println(guiRepairTextField.x);
-//	            		 System.out.println(guiRepairTextField.y);
-//	            		 System.out.println(guiRepairTextField.width);
-//	            		 System.out.println(guiRepairTextField.height);
-//	            		 /*if mouse clicked in GuiTextField*/
-//	            		 if (mouseX >= guiRepairTextField.x && mouseX <= guiRepairTextField.x + guiRepairTextField.width
-//	            				 && mouseY >= guiRepairTextField.y && mouseY <= guiRepairTextField.y + guiRepairTextField.height)
-//	            		 {
-//	            			 IMEChangeManager.switchKL(true);
-//	            		 }
-//	            	 }
+//	                 IMEChangeManager.switchKL(true);
+//	             }
+//	             else if (IMEChangeManager.isKLInGame && guiRepairTextField.isFocused())
+//	             {
+//	             	IMEChangeManager.switchKL(false);
 //	             }
 //	         }
 //    	}
 //    }
-    
-//    @SubscribeEvent
-//    public void onControlGUI(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiContainer){
-//            NativeUtils.inactiveInputMethod("");
-//        }
-//    }
-    @SubscribeEvent
-    public static void onGuiInGameOpenEvent(GuiOpenEvent event)
-    {
-        if (event.getGui() == null)
-        {
-        	IMEChangeManager.switchKL(true);
-        }
-    }
-    
     /**
-     * When any Gui is opened, reload the keyboard layout list, in case there is newly installed keyboard layout.
+     * On opening GuiContainerCreative, switch IME if current tab has a GuiTextField
      * @param event
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
     @SubscribeEvent
-    public static void onAnyGuiOpenEvent(GuiOpenEvent event)
-    {
-        if (event.getGui() != null)
-        {
-        	IMEChangeManager.reloadhKLList();
-        	IMEChangeManager.sethKLInGame(ModConfig.keyboardLayoutInGame, true);
+	public static void onGuiContainerCreativeOpenEvent(GuiOpenEvent event) throws NoSuchFieldException, IllegalAccessException 
+	{
+    	if (ModConfig.isFunctionEnabledGuiContainerCreative) 
+		{
+			GuiScreen guiScreen = event.getGui();
+			if (guiScreen instanceof GuiContainerCreative)
+			{
+				int selectedTabIndex = ((GuiContainerCreative) guiScreen).getSelectedTabIndex();
+				if (CreativeTabs.CREATIVE_TAB_ARRAY[selectedTabIndex].hasSearchBar())
+				{
+					IMEChangeManager.switchKL(false);
+				}
+				else
+				{
+					IMEChangeManager.switchKL(true);
+				}
+			}
+		}
+	}
+    
+	/**
+	 * Handle mouse click in GuiContainerCreative,
+	 * switch IME according to mouse position.
+	 * @param event
+	 * @throws NoSuchFieldException
+	 * @throws NoSuchMethodException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 */
+	@SubscribeEvent
+	public static void onGuiContainerCreativeMouseInputEvent(GuiScreenEvent.MouseInputEvent.Pre event) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException 
+	{
+		/*if mouse left or right button clicked*/
+		if (Mouse.getEventButtonState())
+		{
+			/*if mouse left button down*/
+			if (Mouse.isButtonDown(0))
+			{
+				System.out.println("button down");
+				if (ModConfig.isFunctionEnabledGuiContainerCreative) 
+				{
+					GuiScreen guiScreen = event.getGui();
+					if (guiScreen instanceof GuiContainerCreative)
+					{
+						GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
+						/*if GuiTextField is focused, in other word, if in the search tab of GuiContainerCreative.*/
+						if (guiRepairTextField.isFocused())
+						{
+							int mouseX = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth;
+							int mouseY = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1;
+							/*if mouse clicked in GuiTextField*/
+							if (mouseX < guiRepairTextField.x || mouseX > guiRepairTextField.x + guiRepairTextField.width 
+									|| mouseY < guiRepairTextField.y || mouseY > guiRepairTextField.y + guiRepairTextField.height)
+							{
+								IMEChangeManager.switchKL(true);
+							}
+							else 
+							{
+								IMEChangeManager.switchKL(false);
+							}
+						}
+					}
+				}
+			}
+		}
+		/*mouse button released*/
+		else if (Mouse.getEventButton() != -1)
+		{
+			System.out.println("button lift");
+			if (ModConfig.isFunctionEnabledGuiContainerCreative) 
+			{
+				GuiScreen guiScreen = event.getGui();
+				if (guiScreen instanceof GuiContainerCreative)
+				{
+					GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
+					int tabPage = (int) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeTabPageName, guiScreen);
+//					Method isMouseOverTab = ReflectionUtil.getPrivateMethod(GuiContainerCreative.class, GuiContainerCreativeIsMouseOverTabName, guiScreen, CreativeTabs.class, int.class, int.class);
+//					ReflectionUtil.printReflectedMethodInfo(isMouseOverTab);
+					for (CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY)
+					{
+						/* check if mouse is over a creative tab, if so that tab is going to be activated
+						 * using code from GuiContainerCreative.isMouseOverTab */
+						if (tab.getTabPage() != tabPage)
+				        {
+				            if (tab != CreativeTabs.SEARCH && tab != CreativeTabs.INVENTORY)
+				            {
+				                continue;
+				            }
+				        }
+						int i = tab.getColumn();
+				        int j = 28 * i;
+				        int k = 0;
+
+				        if (tab.isAlignedRight())
+				        {
+				            j = ((GuiContainerCreative) guiScreen).getXSize() - 28 * (6 - i) + 2;
+				        }
+				        else if (i > 0)
+				        {
+				            j += i;
+				        }
+
+				        if (tab.isOnTopRow())
+				        {
+				            k = k - 32;
+				        }
+				        else
+				        {
+				            k = k + ((GuiContainerCreative) guiScreen).getYSize();
+				        }
+				        int mouseX = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth - ((GuiContainer) guiScreen).getGuiLeft();
+						int mouseY = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1 - ((GuiContainer) guiScreen).getGuiTop();
+						
+				        if (mouseX >= j && mouseX <= j + 28 && mouseY >= k && mouseY <= k + 32)
+				        {
+				        	if (tab.hasSearchBar())
+		                    {
+		                    	IMEChangeManager.switchKL(false);
+		                    }
+		                    else
+		                    {
+		                    	IMEChangeManager.switchKL(true);
+		                    }
+		                    break;
+				        }
+					}
+				}
+			}
+		}
+	}
+    
+	// ================================================================================================
+	// In Game
+	// ================================================================================================
+	
+	@SubscribeEvent
+	public static void onGuiInGameOpenEvent(GuiOpenEvent event)
+	{
+	    if (event.getGui() == null)
+	    {
+	    	IMEChangeManager.switchKL(true);
+	    }
+	}
+    
+    // ================================================================================================
+ 	// Keyboard Layout Newly Installed
+ 	// ================================================================================================
+ 	
+     /**
+      * When any Gui is opened, reload the keyboard layout list, in case there is newly installed keyboard layout.
+      * @param event
+      */
+     @SubscribeEvent
+     public static void onAnyGuiOpenEvent(GuiOpenEvent event)
+     {
+         if (event.getGui() != null)
+         {
+         	IMEChangeManager.reloadhKLList();
+         	IMEChangeManager.sethKLInGame(ModConfig.keyboardLayoutInGame, true);
             IMEChangeManager.sethKLInGui(ModConfig.keyboardLayoutInGui, true);
-        }
-    }
-//    @SubscribeEvent
-//    public void onCommandBlock(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiCommandBlock){
-//            NativeUtils.activeInputMethod("");
-//        }
-//    }
-//    @SubscribeEvent
-//    public void onCreateWorld(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiCreateWorld){
-//            NativeUtils.activeInputMethod("");
-//        }
-//    }
-    @SubscribeEvent
-    public static void onGuiScreenBookOpenEvent(GuiOpenEvent event)
-    {
-    	if (ModConfig.isFunctionEnabledGuiScreenBook)
-    	{
-	        if (event.getGui() instanceof GuiScreenBook)
-	        {
-	        	IMEChangeManager.switchKL(false);
-	        }
-    	}
-    }
+         }
+     }
+     
+ 	
+ 	// ================================================================================================
+ 	// Configuration change
+ 	// ================================================================================================
+ 	
+ 	//Config is changed
+     @SubscribeEvent
+     public static void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) 
+     {
+         if (event.getModID().equals(IMEautochange.MODID)) 
+         {
+             ConfigManager.sync(IMEautochange.MODID, Config.Type.INSTANCE);
+             IMEChangeManager.sethKLInGame(ModConfig.keyboardLayoutInGame, false);
+             IMEChangeManager.sethKLInGui(ModConfig.keyboardLayoutInGui, false);
+         }
+     }
     
 //    /**
 //     * Print a warning message when first joining a world if there is problem with language support/availability
@@ -337,34 +426,5 @@ public class ModClientEventHandler {
 //    		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation(IMEChangeManager.keyWarningKLInGuiNotSupported));
 //    	}
 //    }
-//    @SubscribeEvent
-//    public void onRenameWorld(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiWorldEdit){
-//            NativeUtils.activeInputMethod("");
-//        }
-//    }
-//    @SubscribeEvent
-//    public void onAddServer(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiScreenAddServer){
-//            NativeUtils.activeInputMethod("");
-//        }
-//    }
-//    @SubscribeEvent
-//    public void onDirectJoinServer(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiScreenServerList){
-//            NativeUtils.activeInputMethod("");
-//        }
-//    }
-//    @SubscribeEvent
-//    public void onMultiPlayer(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiMultiplayer){
-//            NativeUtils.inactiveInputMethod("");
-//        }
-//    }
-//    @SubscribeEvent
-//    public void onSelectWorld(GuiOpenEvent event){
-//        if (event.getGui() instanceof GuiWorldSelection){
-//            NativeUtils.inactiveInputMethod("");
-//        }
-//    }
+    
 }

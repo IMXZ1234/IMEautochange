@@ -1,4 +1,4 @@
-package com.IMEautochange.compat.JEIPlugin;
+package com.IMEautochange.compat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -37,19 +37,19 @@ import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IIngredientListOverlay;
 
 @JEIPlugin
-public class IMEautochangeJEIPlugin implements IModPlugin {
+public class IMEautochangeJEIPlugin implements IModPlugin 
+{
 	static IIngredientListOverlay IngredientListOverlay;
-//	static GuiScreen IngredientListOverlayGui;
-//	static boolean isMouseClicked = true;
 	static boolean isIngredientListOverlayGuiTextFieldFocused = false;
-//	static boolean isJEISupportEnabled = true;
-	
+	//	static boolean isJEISupportEnabled = true;
+	//	static GuiScreen IngredientListOverlayGui;
+	//	static boolean isMouseClicked = true;
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 		if (OSChecker.isWindows()) {
-			IMEautochange.logger.info("JEI support is available.");
 			this.IngredientListOverlay = jeiRuntime.getIngredientListOverlay();
 			MinecraftForge.EVENT_BUS.register(this);
+			IMEautochange.logger.info("JEI support is available.");
 		}
 	}
 	

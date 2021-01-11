@@ -4,7 +4,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.win32.StdCallLibrary;
 
-public interface Advapi32 extends StdCallLibrary { 
+public interface Advapi32 extends StdCallLibrary 
+{ 
     // Method declarations, constant and structure definitions go here
 	Advapi32 INSTANCE = (Advapi32)Native.loadLibrary("advapi32",Advapi32.class);
 	

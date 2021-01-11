@@ -5,8 +5,8 @@ import net.minecraftforge.common.config.Config.Comment;
 
 @Config(modid = "imeautochange")
 @Config.LangKey("config.imeautochange.general")
-public class ModConfig {
-	
+public class ModConfig 
+{
 	@Config.Name("Keyboard Layout In Game")
 	@Config.LangKey("config.imeautochange.general.keyboardLayoutInGame")
 	@Comment("The language to be switched to in game.")
@@ -43,5 +43,15 @@ public class ModConfig {
 	@Comment("Enable IME switching when searching in JEI ingredient overlay.")
 	public static boolean isFunctionEnabledJEISupport = true;
 	
+	@Config.Name("Enable Function Patchouli Book Searching")
+	@Config.LangKey("config.imeautochange.general.isFunctionEnabledPatchouliSupport")
+	@Comment("Enable IME switching when searching in Patchouli Gui BookEntryList.")
+	public static boolean isFunctionEnabledPatchouliSupport = true;
+	
+	@Config.Name("Enable Function Botania Lexicon Searching")
+	@Config.LangKey("config.imeautochange.general.isFunctionEnabledBotaniaSupport")
+	@Comment("Enable IME switching when searching in Botania Lexicon Gui LexiconIndex.")
+	public static boolean isFunctionEnabledBotaniaSupport = true;
+
 }
 

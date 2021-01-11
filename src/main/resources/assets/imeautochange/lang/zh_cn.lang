@@ -10,6 +10,8 @@ config.imeautochange.general.isFunctionEnabledGuiScreenBook=编辑书本时启�
 config.imeautochange.general.isFunctionEnabledGuiRepair=铁砧中重命名物品时启用切换
 config.imeautochange.general.isFunctionEnabledGuiContainerCreative=创造模式背包搜索物品时启用切换
 config.imeautochange.general.isFunctionEnabledJEISupport=JEI搜索框搜索时启用切换
+config.imeautochange.general.isFunctionEnabledPatchouliSupport=帕秋莉指导书搜索框搜索时启用切换
+config.imeautochange.general.isFunctionEnabledBotaniaSupport=植物魔法辞典搜索框搜索时启用切换
 
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: 游戏中使用的IME未安装，功能关闭
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: 切换的IME未安装，功能关闭

@@ -6,7 +6,8 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.win32.StdCallLibrary;
 
-public class ModNativeMethods{
+public class ModNativeMethods
+{
 	static final HashMap<String, Long> KLTable = new HashMap<String, Long>();
 	static{
 		KLTable.put("zh_cn", (long) 0x08040804);

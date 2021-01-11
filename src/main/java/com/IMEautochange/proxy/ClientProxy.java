@@ -3,6 +3,7 @@ package com.IMEautochange.proxy;
 //import org.codehaus.plexus.util.Os;
 
 import com.IMEautochange.IMEautochange;
+import com.IMEautochange.compat.IMEautochangeCompat;
 import com.IMEautochange.event.ModClientEventHandler;
 import com.IMEautochange.key.ModKeys;
 import com.IMEautochange.proxy.CommonProxy;
@@ -38,6 +39,7 @@ public class ClientProxy extends CommonProxy
         	IMEautochange.logger.info("OS is Windows, main features enabled.");
         	ModKeys.registerKeys();
         	ModClientEventHandler.register();
+        	IMEautochangeCompat.init();
         }
         else
         {
