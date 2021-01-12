@@ -33,7 +33,6 @@ import vazkii.patchouli.client.book.gui.GuiBookEntryList;
 
 public class IMEautochangeBotaniaCompat 
 {
-//	static boolean isLastGuiScreenGuiBookEntryList = false;
 	public static void init()
 	{
 		IMEautochange.logger.info("Botania support is available.");
@@ -52,7 +51,6 @@ public class IMEautochangeBotaniaCompat
 			if (event.getGui() instanceof GuiLexiconIndex)
 			{
 				IMEChangeManager.switchKL(false);
-//				isLastGuiScreenGuiBookEntryList = true;
 			}
 		}
 	}
@@ -63,7 +61,7 @@ public class IMEautochangeBotaniaCompat
 	 */
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onGuiLexiconWithoutGuiTextFieldOpenEvent(GuiOpenEvent event)
+	public static void onGuiLexiconWithoutTextFieldOpenEvent(GuiOpenEvent event)
 	{
 		if(ModConfig.isFunctionEnabledBotaniaSupport)
 		{
@@ -71,7 +69,6 @@ public class IMEautochangeBotaniaCompat
 			if (!(guiScreen instanceof GuiLexiconIndex) && guiScreen instanceof GuiLexicon && !((GuiLexicon) guiScreen).notesEnabled)
 			{
 				IMEChangeManager.switchKL(true);
-//				isLastGuiScreenGuiBookEntryList = false;
 			}
 		}
 	}
@@ -87,8 +84,7 @@ public class IMEautochangeBotaniaCompat
 		/*mouse button released*/
 		if (Mouse.getEventButton() != -1 && Mouse.getEventButtonState())
 		{
-			System.out.println("button lift");
-			if(ModConfig.isFunctionEnabledPatchouliSupport)
+			if(ModConfig.isFunctionEnabledBotaniaSupport)
 			{
 				GuiScreen guiScreen = event.getGui();
 				if (guiScreen instanceof GuiLexicon)

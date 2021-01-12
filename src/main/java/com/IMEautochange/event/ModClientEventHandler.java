@@ -64,7 +64,7 @@ public class ModClientEventHandler
 	
 //	static boolean isGuiRepairGuiTextFieldFocused = false;
 //	static boolean isGuiContainerCreativeGuiTextFieldFocused = false;
-	static boolean isGuiOpenInGuiRepairPossible = false;
+	static boolean isLastGuiGuiRepair = false;
 	
 	public static void register() 
 	{
@@ -127,27 +127,27 @@ public class ModClientEventHandler
 	// Anvil Rename
 	// ================================================================================================
 	
-    @SubscribeEvent
-    public static void onGuiRepairClientTickEvent(ClientTickEvent event) throws NoSuchFieldException, IllegalAccessException 
-    {
-    	if (ModConfig.isFunctionEnabledGuiRepair) 
-    	{
-    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
-	    	if (guiScreen instanceof GuiRepair)
-	    	{
-	            GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiRepair.class, GuiRepairGuiTextFieldName, guiScreen);
-	            if (!IMEChangeManager.isKLInGame && !guiRepairTextField.isFocused())
-	            {
-	                IMEChangeManager.switchKL(true);
-	                isGuiOpenInGuiRepairPossible = false;
-	            }
-	            else if (IMEChangeManager.isKLInGame && guiRepairTextField.isFocused())
-	            {
-	            	IMEChangeManager.switchKL(false);
-	            }
-	        }
-    	}
-    }
+//    @SubscribeEvent
+//    public static void onGuiRepairClientTickEvent(ClientTickEvent event) throws NoSuchFieldException, IllegalAccessException 
+//    {
+//    	if (ModConfig.isFunctionEnabledGuiRepair) 
+//    	{
+//    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
+//	    	if (guiScreen instanceof GuiRepair)
+//	    	{
+//	            GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiRepair.class, GuiRepairGuiTextFieldName, guiScreen);
+//	            if (!IMEChangeManager.isKLInGame && !guiRepairTextField.isFocused())
+//	            {
+//	                IMEChangeManager.switchKL(true);
+//	                isGuiOpenInGuiRepairPossible = false;
+//	            }
+//	            else if (IMEChangeManager.isKLInGame && guiRepairTextField.isFocused())
+//	            {
+//	            	IMEChangeManager.switchKL(false);
+//	            }
+//	        }
+//    	}
+//    }
     /**
      * Fix GuiTextField in GuiRepair not losing focus when opening other Gui through mouse click.
      * This is because MinecraftForge gets Event Listeners added by other mods informed of mouse input before 
@@ -164,30 +164,69 @@ public class ModClientEventHandler
         {
     		/* other Gui opened in GuiRepair
     		 * may be JEI Gui(most likely), etc*/
-    		if (isGuiOpenInGuiRepairPossible) 
+    		if (isLastGuiGuiRepair) 
     		{
     			IMEChangeManager.switchKL(true);
+    			isLastGuiGuiRepair = false;
     		}
         }
     }
-    
-    @SubscribeEvent
-    public static void onGuiRepairMouseEvent(GuiScreenEvent.MouseInputEvent.Pre event) throws NoSuchFieldException, IllegalAccessException 
+//    
+//    @SubscribeEvent
+//    public static void onGuiRepairMouseEvent(GuiScreenEvent.MouseInputEvent.Pre event) throws NoSuchFieldException, IllegalAccessException 
+//    {
+//    	if (ModConfig.isFunctionEnabledGuiRepair) 
+//    	{
+//    		/*Now */
+//    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
+//	    	if (guiScreen instanceof GuiRepair)
+//	    	{
+//	    		 /*if mouse left button down*/
+//		       	 if (Mouse.isButtonDown(0) && !IMEChangeManager.isKLInGame)
+//		       	 {
+//		       		isGuiOpenInGuiRepairPossible = true;
+//		       	 }
+//	        }
+//    	}
+//    }
+    /**
+     * When mouse clicks inside GuiTextField in GuiRepair, text field will be activated,
+     * Switch IME to IME in Game, else switch to IME in Gui.
+     * Note that the mouse input event would be handled by JEI first,
+     * and will be cancelled if 
+     * @param event
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onGuiRepairMouseInputEvent(GuiScreenEvent.MouseInputEvent event) throws NoSuchFieldException, IllegalAccessException 
     {
     	if (ModConfig.isFunctionEnabledGuiRepair) 
     	{
-    		/*Now */
-    		GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
-	    	if (guiScreen instanceof GuiRepair)
+    		GuiScreen guiScreen = event.getGui();
+	    	if (guiScreen instanceof GuiRepair && !event.isCanceled())
 	    	{
-	    		 /*if mouse left button down*/
-		       	 if (Mouse.isButtonDown(0) && !IMEChangeManager.isKLInGame)
-		       	 {
-		       		isGuiOpenInGuiRepairPossible = true;
-		       	 }
+	    		GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiRepair.class, GuiRepairGuiTextFieldName, guiScreen);
+				/* if mouse left button down */
+				if (Mouse.isButtonDown(0)) 
+				{
+					int mouseX = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth;
+					int mouseY = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1;
+					/* if mouse clicked in GuiTextField */
+					if (mouseX < guiRepairTextField.x || mouseX > guiRepairTextField.x + guiRepairTextField.width
+							|| mouseY < guiRepairTextField.y || mouseY > guiRepairTextField.y + guiRepairTextField.height) 
+					{
+						IMEChangeManager.switchKL(true);
+					} else 
+					{
+						IMEChangeManager.switchKL(false);
+						isLastGuiGuiRepair = true;
+					}
+				}
 	        }
     	}
     }
+    
     
 	// ================================================================================================
 	// Creative Tab Searching
@@ -259,21 +298,20 @@ public class ModClientEventHandler
 			/*if mouse left button down*/
 			if (Mouse.isButtonDown(0))
 			{
-				System.out.println("button down");
 				if (ModConfig.isFunctionEnabledGuiContainerCreative) 
 				{
 					GuiScreen guiScreen = event.getGui();
 					if (guiScreen instanceof GuiContainerCreative)
 					{
-						GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
+						GuiTextField guiContainerCreativeTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
 						/*if GuiTextField is focused, in other word, if in the search tab of GuiContainerCreative.*/
-						if (guiRepairTextField.isFocused())
+						if (guiContainerCreativeTextField.isFocused())
 						{
 							int mouseX = Mouse.getEventX() * guiScreen.width / guiScreen.mc.displayWidth;
 							int mouseY = guiScreen.height - Mouse.getEventY() * guiScreen.height / guiScreen.mc.displayHeight - 1;
 							/*if mouse clicked in GuiTextField*/
-							if (mouseX < guiRepairTextField.x || mouseX > guiRepairTextField.x + guiRepairTextField.width 
-									|| mouseY < guiRepairTextField.y || mouseY > guiRepairTextField.y + guiRepairTextField.height)
+							if (mouseX < guiContainerCreativeTextField.x || mouseX > guiContainerCreativeTextField.x + guiContainerCreativeTextField.width 
+									|| mouseY < guiContainerCreativeTextField.y || mouseY > guiContainerCreativeTextField.y + guiContainerCreativeTextField.height)
 							{
 								IMEChangeManager.switchKL(true);
 							}
@@ -289,7 +327,6 @@ public class ModClientEventHandler
 		/*mouse button released*/
 		else if (Mouse.getEventButton() != -1)
 		{
-			System.out.println("button lift");
 			if (ModConfig.isFunctionEnabledGuiContainerCreative) 
 			{
 				GuiScreen guiScreen = event.getGui();
@@ -297,8 +334,6 @@ public class ModClientEventHandler
 				{
 					GuiTextField guiRepairTextField = (GuiTextField) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeGuiTextFieldName, guiScreen);
 					int tabPage = (int) ReflectionUtil.getPrivateField(GuiContainerCreative.class, GuiContainerCreativeTabPageName, guiScreen);
-//					Method isMouseOverTab = ReflectionUtil.getPrivateMethod(GuiContainerCreative.class, GuiContainerCreativeIsMouseOverTabName, guiScreen, CreativeTabs.class, int.class, int.class);
-//					ReflectionUtil.printReflectedMethodInfo(isMouseOverTab);
 					for (CreativeTabs tab : CreativeTabs.CREATIVE_TAB_ARRAY)
 					{
 						/* check if mouse is over a creative tab, if so that tab is going to be activated

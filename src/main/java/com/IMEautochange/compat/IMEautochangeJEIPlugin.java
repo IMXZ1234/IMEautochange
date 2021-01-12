@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.KeyboardInputEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -17,6 +18,8 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,11 +42,16 @@ import mezz.jei.api.IIngredientListOverlay;
 @JEIPlugin
 public class IMEautochangeJEIPlugin implements IModPlugin 
 {
-	static IIngredientListOverlay IngredientListOverlay;
-	static boolean isIngredientListOverlayGuiTextFieldFocused = false;
-	//	static boolean isJEISupportEnabled = true;
-	//	static GuiScreen IngredientListOverlayGui;
-	//	static boolean isMouseClicked = true;
+	/**
+	 * JEI IngredientListOverlay is not a Gui! Surprising!
+	 */
+	private static IIngredientListOverlay IngredientListOverlay;
+	private static boolean isIngredientListOverlayGuiTextFieldFocused = false;
+//	public final char[] JEIPrefixList = new char[] {'^','%','@','$','&','#'};
+//	public final int JEIPrefixListLen = 6;
+	public final char[] JEIPrefixList = new char[] {'^','@','$','&'};
+	public final int JEIPrefixListLen = 4;
+	
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
 		if (OSChecker.isWindows()) {
@@ -79,16 +87,27 @@ public class IMEautochangeJEIPlugin implements IModPlugin
 		}
 	}
 	
-//	@SideOnly(Side.CLIENT)
-//    @SubscribeEvent(priority = EventPriority.HIGHEST)
-//    public void onHotKeyInputEvent(InputEvent.KeyInputEvent event)
-//    {
-//        if (ModKeys.toggleJEISupport.isPressed())
-//        {
-////        	Minecraft.getMinecraft().ingameGUI.getChatGUI().addToSentMessages("JEItoggled");
-//        	isJEISupportEnabled = !isJEISupportEnabled;
-//		}
-//    }
+	/**
+	 * When typing in JEI IngredientListOverlay search field, 
+	 * Switch IME to IME in Game if characters like
+	 * @param event
+	 */
+	@SideOnly(Side.CLIENT)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onHotKeyInputEvent(GuiScreenEvent.KeyboardInputEvent event)
+    {
+        if (IngredientListOverlay.hasKeyboardFocus())
+        {
+        	for (int i = 0; i < JEIPrefixListLen; i++) 
+        	{
+        		if (Keyboard.getEventCharacter() == JEIPrefixList[i])
+	        	{
+	        		IMEChangeManager.switchKL(true);
+	        		return;
+	        	}
+        	}
+		}
+    }
 	
 //	@SideOnly(Side.CLIENT)
 //	@SubscribeEvent//(priority = EventPriority.LOWEST)

@@ -10,6 +10,7 @@ import com.IMEautochange.jna.IMEChangeManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -23,11 +24,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntryList;
 
 public class IMEautochangePatchouliCompat 
 {
-	static boolean isLastGuiScreenGuiBookEntryList = false;
+//	static boolean isLastGuiScreenGuiBookEntryList = false;
 	public static void init()
 	{
 		IMEautochange.logger.info("Patchouli support is available.");
@@ -46,21 +48,20 @@ public class IMEautochangePatchouliCompat
 			if (event.getGui() instanceof GuiBookEntryList)
 			{
 				IMEChangeManager.switchKL(false);
-				isLastGuiScreenGuiBookEntryList = true;
 			}
 		}
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void onAnyGuiOpenEvent(GuiOpenEvent event)
+	public static void onGuiBookWithoutTextFieldOpenEvent(GuiOpenEvent event)
 	{
 		if(ModConfig.isFunctionEnabledPatchouliSupport)
 		{
-			if (isLastGuiScreenGuiBookEntryList)
+			GuiScreen guiScreen = event.getGui();
+			if (guiScreen instanceof GuiBook && !(guiScreen instanceof GuiBookEntryList))
 			{
 				IMEChangeManager.switchKL(true);
-				isLastGuiScreenGuiBookEntryList = false;
 			}
 		}
 	}
