@@ -1,11 +1,11 @@
-key.imeautochange.reloadLanguageList=Reload Language List
+key.imeautochange.reloadLanguageList=Synchronize Language List
 key.imeautochange.openChatWithIMEToggled=Open Chat with IME Toggled
 key.categories.imeautochange=IME Auto Change
 
 config.imeautochange.general=Configuration for IME Auto Change
 config.imeautochange.general.languageInGame=Language In game
 config.imeautochange.general.languageInGui=Language to Switch to
-config.imeautochange.general.automaticLanguageListReload=Automatic Language List Reload
+config.imeautochange.general.automaticLanguageListReload=Automatic Language List Synchronization
 config.imeautochange.general.isFunctionEnabledGuiInGame=Function On Back To Game
 config.imeautochange.general.isFunctionEnabledGuiSign=Function Editing Sign
 config.imeautochange.general.isFunctionEnabledGuiScreenBook=Function Editing Book
@@ -16,7 +16,7 @@ config.imeautochange.general.isFunctionEnabledJEISupport=Function JEI Search Box
 config.imeautochange.general.isFunctionEnabledPatchouliSupport=Function Patchouli Book Search Box Support
 config.imeautochange.general.isFunctionEnabledBotaniaSupport=Function Botania Lexicon Search Box Support
 
-text.imeautochange.infoKLListReloaded=IMEautochange: Language List Reloaded
+text.imeautochange.infoKLListReloaded=IMEautochange: Synchronized Language List with OS
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: IME in game is not installed, function disabled.
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: IME to Switch to is not installed, function disabled.
 text.imeautochange.warningKLInGameNotSupported=IMEautochange: IME in game is not supported, function disabled.

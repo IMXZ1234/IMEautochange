@@ -1,11 +1,11 @@
-key.imeautochange.reloadLanguageList=重载输入法列表
+key.imeautochange.reloadLanguageList=同步系统输入法列表
 key.imeautochange.openChatWithIMEToggled=开启聊天栏并切换输入法
 key.categories.imeautochange=输入法自动切换
 
 config.imeautochange.general=输入法自动切换设置
 config.imeautochange.general.languageInGame=游戏中使用的输入法
 config.imeautochange.general.languageInGui=切换的输入法
-config.imeautochange.general.automaticLanguageListReload=自动重载输入法列表
+config.imeautochange.general.automaticLanguageListReload=自动同步系统输入法列表
 config.imeautochange.general.isFunctionEnabledGuiInGame=回到游戏界面时启用切换
 config.imeautochange.general.isFunctionEnabledGuiSign=编辑公告牌时启用切换
 config.imeautochange.general.isFunctionEnabledGuiScreenBook=编辑书本时启用切换
@@ -16,7 +16,7 @@ config.imeautochange.general.isFunctionEnabledJEISupport=JEI搜索框搜索时�
 config.imeautochange.general.isFunctionEnabledPatchouliSupport=帕秋莉指导书搜索框搜索时启用切换
 config.imeautochange.general.isFunctionEnabledBotaniaSupport=植物魔法辞典搜索框搜索时启用切换
 
-text.imeautochange.infoKLListReloaded=IMEautochange: 已重载输入法列表
+text.imeautochange.infoKLListReloaded=IMEautochange: 已同步系统输入法列表
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: 游戏中使用的IME未安装，功能关闭
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: 切换的IME未安装，功能关闭
 text.imeautochange.warningKLInGameNotSupported=IMEautochange: 游戏中使用的IME不为本模组支持，功能关闭

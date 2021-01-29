@@ -21,7 +21,7 @@ public class ModConfig
 	@Config.Name("Automatic Language List Reload")
 	@Config.LangKey("config.imeautochange.general.automaticLanguageListReload")
 	@Comment("Automatically detects language installation or support change. You can do this with HotKey manually. Disabling this will lead to less resource consumption.")
-	public static boolean automaticLanguageListReload = true;
+	public static boolean automaticLanguageListReload = false;
 	
 	// Functions
 	@Config.Name("Enable Function Sign Editing")
