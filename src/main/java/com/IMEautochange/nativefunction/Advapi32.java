@@ -1,4 +1,4 @@
-package com.IMEautochange.jna;
+package com.IMEautochange.nativefunction;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;

@@ -1,21 +1,27 @@
-key.imeautochange.toggleJEISupport=Toggle JEI Support
+key.imeautochange.reloadLanguageList=Reload Language List
 key.imeautochange.openChatWithIMEToggled=Open Chat with IME Toggled
 key.categories.imeautochange=IME Auto Change
 
 config.imeautochange.general=Configuration for IME Auto Change
-config.imeautochange.general.keyboardLayoutInGame=Language In game
-config.imeautochange.general.keyboardLayoutInGui=Language to Switch to
+config.imeautochange.general.languageInGame=Language In game
+config.imeautochange.general.languageInGui=Language to Switch to
+config.imeautochange.general.automaticLanguageListReload=Automatic Language List Reload
+config.imeautochange.general.isFunctionEnabledGuiInGame=Function On Back To Game
 config.imeautochange.general.isFunctionEnabledGuiSign=Function Editing Sign
 config.imeautochange.general.isFunctionEnabledGuiScreenBook=Function Editing Book
 config.imeautochange.general.isFunctionEnabledGuiRepair=Function Anvil Renaming
 config.imeautochange.general.isFunctionEnabledGuiContainerCreative=Function Creative Tab searching
+config.imeautochange.general.isFunctionEnabledCreativeTabOpen=Function Switching on Opening Creative Tab
 config.imeautochange.general.isFunctionEnabledJEISupport=Function JEI Search Box Support
 config.imeautochange.general.isFunctionEnabledPatchouliSupport=Function Patchouli Book Search Box Support
 config.imeautochange.general.isFunctionEnabledBotaniaSupport=Function Botania Lexicon Search Box Support
 
+text.imeautochange.infoKLListReloaded=IMEautochange: Language List Reloaded
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: IME in game is not installed, function disabled.
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: IME to Switch to is not installed, function disabled.
 text.imeautochange.warningKLInGameNotSupported=IMEautochange: IME in game is not supported, function disabled.
 text.imeautochange.warningKLInGuiNotSupported=IMEautochange: IME to Switch to is not supported, function disabled.
-text.imeautochange.warningKLInGameInstalled=IMEautochange: IME in game is detected to have been newly installed, function enabled.
-text.imeautochange.warningKLInGuiInstalled=IMEautochange: IME in Gui is detected to have been newly installed, function enabled.
+text.imeautochange.infoKLInGameInstalled=IMEautochange: IME in game is detected to have been newly installed, function enabled.
+text.imeautochange.infoKLInGuiInstalled=IMEautochange: IME in Gui is detected to have been newly installed, function enabled.
+text.imeautochange.infoKLInGameSupported=IMEautochange: IME in game is detected to have been newly added to supported languages, function enabled.
+text.imeautochange.infoKLInGuiSupported=IMEautochange: IME in Gui is detected to have been newly added to supported languages, function enabled.

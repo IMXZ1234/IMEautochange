@@ -1,21 +1,27 @@
-key.imeautochange.toggleJEISupport=开启\关闭对JEI搜索框的支持
-key.imeautochange.openchatwithIMEtoggled=开启聊天栏并切换输入法
+key.imeautochange.reloadLanguageList=重载输入法列表
+key.imeautochange.openChatWithIMEToggled=开启聊天栏并切换输入法
 key.categories.imeautochange=输入法自动切换
 
 config.imeautochange.general=输入法自动切换设置
-config.imeautochange.general.keyboardLayoutInGame=游戏中使用的输入法
-config.imeautochange.general.keyboardLayoutInGui=切换的输入法
+config.imeautochange.general.languageInGame=游戏中使用的输入法
+config.imeautochange.general.languageInGui=切换的输入法
+config.imeautochange.general.automaticLanguageListReload=自动重载输入法列表
+config.imeautochange.general.isFunctionEnabledGuiInGame=回到游戏界面时启用切换
 config.imeautochange.general.isFunctionEnabledGuiSign=编辑公告牌时启用切换
 config.imeautochange.general.isFunctionEnabledGuiScreenBook=编辑书本时启用切换
 config.imeautochange.general.isFunctionEnabledGuiRepair=铁砧中重命名物品时启用切换
 config.imeautochange.general.isFunctionEnabledGuiContainerCreative=创造模式背包搜索物品时启用切换
+config.imeautochange.general.isFunctionEnabledCreativeTabOpen=打开创造模式背包标签页时启用切换
 config.imeautochange.general.isFunctionEnabledJEISupport=JEI搜索框搜索时启用切换
 config.imeautochange.general.isFunctionEnabledPatchouliSupport=帕秋莉指导书搜索框搜索时启用切换
 config.imeautochange.general.isFunctionEnabledBotaniaSupport=植物魔法辞典搜索框搜索时启用切换
 
+text.imeautochange.infoKLListReloaded=IMEautochange: 已重载输入法列表
 text.imeautochange.warningKLInGameNotInstalled=IMEautochange: 游戏中使用的IME未安装，功能关闭
 text.imeautochange.warningKLInGuiNotInstalled=IMEautochange: 切换的IME未安装，功能关闭
 text.imeautochange.warningKLInGameNotSupported=IMEautochange: 游戏中使用的IME不为本模组支持，功能关闭
 text.imeautochange.warningKLInGuiNotSupported=IMEautochange: 切换的IME不为本模组支持，功能关闭
-text.imeautochange.warningKLInGameInstalled=IMEautochange: 检测到新安装了游戏中使用的IME，功能开启
-text.imeautochange.warningKLInGuiInstalled=IMEautochange: 检测到新安装了切换的IME，功能开启
+text.imeautochange.infoKLInGameInstalled=IMEautochange: 检测到新安装了游戏中使用的IME，功能开启
+text.imeautochange.infoKLInGuiInstalled=IMEautochange: 检测到新安装了切换的IME，功能开启
+text.imeautochange.infoKLInGameSupported=IMEautochange: 检测到游戏中使用的IME语言新加入支持列表，功能开启
+text.imeautochange.infoKLInGuiSupported=IMEautochange: 检测到游戏中切换的IME语言新加入支持列表，功能开启

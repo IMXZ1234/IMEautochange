@@ -7,16 +7,23 @@ import net.minecraftforge.common.config.Config.Comment;
 @Config.LangKey("config.imeautochange.general")
 public class ModConfig 
 {
-	@Config.Name("Keyboard Layout In Game")
-	@Config.LangKey("config.imeautochange.general.keyboardLayoutInGame")
+	@Config.Name("Language In Game")
+	@Config.LangKey("config.imeautochange.general.languageInGame")
 	@Comment("The language to be switched to in game.")
-	public static String keyboardLayoutInGame = new String("en_us");
+	public static String languageInGame = new String("en_us");
 	
-	@Config.Name("Keyboard Layout In Gui")
-	@Config.LangKey("config.imeautochange.general.keyboardLayoutInGui")
+	@Config.Name("Language In Gui")
+	@Config.LangKey("config.imeautochange.general.languageInGui")
 	@Comment("The language to be switched to in gui: chatline, anvil textfield, etc.")
-	public static String keyboardLayoutInGui = new String("zh_cn");
+	public static String languageInGui = new String("zh_cn");
 	
+	// Language Detector
+	@Config.Name("Automatic Language List Reload")
+	@Config.LangKey("config.imeautochange.general.automaticLanguageListReload")
+	@Comment("Automatically detects language installation or support change. You can do this with HotKey manually. Disabling this will lead to less resource consumption.")
+	public static boolean automaticLanguageListReload = true;
+	
+	// Functions
 	@Config.Name("Enable Function Sign Editing")
 	@Config.LangKey("config.imeautochange.general.isFunctionEnabledGuiSign")
 	@Comment("Enable IME switching when editing sign.")
@@ -37,7 +44,17 @@ public class ModConfig
 	@Comment("Enable IME switching when searching in creative tab.")
 	public static boolean isFunctionEnabledGuiContainerCreative = true;
 	
-	//Compatibility
+	@Config.Name("Enable Function Back To Game")
+	@Config.LangKey("config.imeautochange.general.isFunctionEnabledGuiInGame")
+	@Comment("Enable IME switching when going back to game from other Gui.")
+	public static boolean isFunctionEnabledGuiInGame = true;
+	
+	@Config.Name("Enable Function On Opening Creative Tab")
+	@Config.LangKey("config.imeautochange.general.isFunctionEnabledCreativeTabOpen")
+	@Comment("Enable IME switching on opening creative tab. Only functions when Function Creative Tab Searching is enabled.")
+	public static boolean isFunctionEnabledCreativeTabOpen = true;
+
+	// Compatibility
 	@Config.Name("Enable Function JEI Searching")
 	@Config.LangKey("config.imeautochange.general.isFunctionEnabledJEISupport")
 	@Comment("Enable IME switching when searching in JEI ingredient overlay.")
@@ -52,6 +69,5 @@ public class ModConfig
 	@Config.LangKey("config.imeautochange.general.isFunctionEnabledBotaniaSupport")
 	@Comment("Enable IME switching when searching in Botania Lexicon Gui LexiconIndex.")
 	public static boolean isFunctionEnabledBotaniaSupport = true;
-
 }
 
