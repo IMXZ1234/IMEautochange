@@ -1,5 +1,7 @@
 package com.IMEautochange.nativefunction;
 
+import java.io.File;
+
 public class LinuxNativeFunctionProvider extends NativeFunctionProvider{
 
 	@Override
@@ -15,7 +17,7 @@ public class LinuxNativeFunctionProvider extends NativeFunctionProvider{
 	}
 
 	@Override
-	public boolean reloadSupportedLanguageList() {
+	public boolean reloadSupportedLanguageList(File supportedLanguageListDirFile) {
 		// TODO Auto-generated method stub
 		return true;
 	}

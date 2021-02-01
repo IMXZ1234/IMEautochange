@@ -1,6 +1,5 @@
 package com.IMEautochange.compat;
 
-import com.IMEautochange.config.ModConfig;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 
 import net.minecraft.client.gui.GuiScreen;

@@ -2,16 +2,7 @@ package com.IMEautochange.compat;
 
 import com.IMEautochange.IMEautochange;
 import com.IMEautochange.config.ModConfig;
-import com.IMEautochange.event.AnvilEventsHandler;
-import com.IMEautochange.event.BackToGameEventsHandler;
-import com.IMEautochange.event.BookEditEventsHandler;
-import com.IMEautochange.event.CreativeInventoryEventsHandler;
-import com.IMEautochange.event.HotKeyInputEventsHandler;
-import com.IMEautochange.event.ModClientEventsManager;
-import com.IMEautochange.event.SignEditEventsHandler;
-import com.IMEautochange.event.CreativeInventoryEventsHandler.CreativeTabOpenEventsHandler;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 
 /**

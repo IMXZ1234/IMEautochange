@@ -3,15 +3,12 @@ package com.IMEautochange.compat;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.IMEautochange.IMEautochange;
-import com.IMEautochange.config.ModConfig;
 import com.IMEautochange.event.ModClientEventsManager;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 import com.IMEautochange.util.MouseOverUtil;
 import com.IMEautochange.util.ReflectionConstants;
 import com.IMEautochange.util.ReflectionUtil;
 
-import mezz.jei.api.IIngredientListOverlay;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JEIPlugin;
@@ -22,10 +19,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

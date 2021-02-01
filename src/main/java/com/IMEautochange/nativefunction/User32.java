@@ -1,10 +1,7 @@
 package com.IMEautochange.nativefunction;
 
-import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.NativeLong;
 import com.sun.jna.win32.StdCallLibrary;
-import com.sun.jna.platform.win32.WinDef;
 
 public interface User32 extends StdCallLibrary 
 { 
@@ -12,7 +9,7 @@ public interface User32 extends StdCallLibrary
 	 User32 INSTANCE = (User32)Native.loadLibrary("user32",User32.class);
 	 
 	 boolean GetKeyboardLayoutNameW(char[] lpbuffer);
-	 int ActivateKeyboardLayout(int hkl,int Flags);
+	 int ActivateKeyboardLayout(long hkl,int Flags);
 	 int GetKeyboardLayout(int idThread);
 	 int GetForegroundWindow();
 	 int GWL_EXSTYLE = -20;
@@ -21,7 +18,7 @@ public interface User32 extends StdCallLibrary
 	 int GetWindowLongW(int hWnd, int nIndex);
 	 int SetWindowLongW(int hWnd, int nIndex, int dwNewLong);
 	 //fills at interval length of long, unexpectedly. but truth is that
-	 int GetKeyboardLayoutList(int nBuff,long[] lpList);
+	 int GetKeyboardLayoutList(int nBuff,long[] hKLList);
 	 public static int HWND_TOP = (int) 0;
 	 int SWP_NOMOVE = (int) 0x0002;
 	 int SWP_NOSIZE = (int) 0x0001;

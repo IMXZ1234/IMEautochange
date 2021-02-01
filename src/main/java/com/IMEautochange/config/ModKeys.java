@@ -1,7 +1,7 @@
 package com.IMEautochange.config;
 
-import net.java.games.input.Component.Identifier.Key;
 import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;

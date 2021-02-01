@@ -2,7 +2,6 @@ package com.IMEautochange.event;
 
 import org.lwjgl.input.Mouse;
 
-import com.IMEautochange.config.ModConfig;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 import com.IMEautochange.util.MouseOverUtil;
 import com.IMEautochange.util.ReflectionConstants;

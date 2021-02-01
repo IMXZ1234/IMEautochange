@@ -1,6 +1,5 @@
 package com.IMEautochange.event;
 
-import com.IMEautochange.config.ModConfig;
 import com.IMEautochange.config.ModKeys;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 

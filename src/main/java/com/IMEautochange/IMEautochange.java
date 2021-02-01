@@ -1,8 +1,5 @@
 package com.IMEautochange;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
-
 import org.apache.logging.log4j.Logger;
 
 import com.IMEautochange.proxy.CommonProxy;
@@ -14,9 +11,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 /**
  * @author IMXZ
@@ -26,7 +20,7 @@ public class IMEautochange
 {
     public static final String MODID = "imeautochange";
     public static final String NAME = "IME Auto Change";
-    public static final String VERSION = "1.4.0";
+    public static final String VERSION = "1.4.1";
     
     public static Logger logger;
 

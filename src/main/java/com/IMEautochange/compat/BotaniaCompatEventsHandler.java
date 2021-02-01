@@ -2,7 +2,6 @@ package com.IMEautochange.compat;
 
 import org.lwjgl.input.Mouse;
 
-import com.IMEautochange.config.ModConfig;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 
 import net.minecraft.client.gui.GuiScreen;

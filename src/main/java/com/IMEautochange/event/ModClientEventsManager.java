@@ -3,11 +3,8 @@ package com.IMEautochange.event;
 import com.IMEautochange.IMEautochange;
 import com.IMEautochange.compat.ModCompatEventsManager;
 import com.IMEautochange.config.ModConfig;
-import com.IMEautochange.config.ModKeys;
 import com.IMEautochange.nativefunction.ModFunctionManager;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
