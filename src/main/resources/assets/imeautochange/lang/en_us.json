@@ -1,0 +1,10 @@
+{
+	"imeautochange.gui.configscreen.textfield.selectedimename":"Selected IME",
+	"imeautochange.gui.configscreen.button.confirm":"Done",
+	"imeautochange.gui.configscreen.button.configelementenabled":"Enabled",
+	"imeautochange.gui.configscreen.button.configelementdisabled":"Disabled",
+	
+	"imeautochange.config.ingamegui":"In Game Gui",
+	"imeautochange.config.editbookscreen":"Edit Book Screen",
+	"imeautochange.config.editsignscreen":"Edit Sign Screen"
+}
