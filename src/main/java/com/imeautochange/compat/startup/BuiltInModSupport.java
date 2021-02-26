@@ -1,19 +1,13 @@
 package com.imeautochange.compat.startup;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
-import com.imeautochange.ModFunctionManager;
-import com.imeautochange.api.DummyClass;
 import com.imeautochange.compat.JEICompatIngredientListOverlayAdapter;
 import com.imeautochange.compat.event.JEICompatPrefixKeyboardInputHandler;
 import com.imeautochange.config.ClassConfigInfo;
-import com.imeautochange.event.ModClientEventsHandler;
 import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.startup.IMESupport;
 
-import mezz.jei.api.runtime.IIngredientListOverlay;
-import mezz.jei.gui.overlay.IngredientListOverlay;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
 

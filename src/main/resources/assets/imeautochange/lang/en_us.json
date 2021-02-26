@@ -1,10 +1,16 @@
 {
 	"imeautochange.gui.configscreen.textfield.selectedimename":"Selected IME",
 	"imeautochange.gui.configscreen.button.confirm":"Done",
+	"imeautochange.gui.configscreen.button.default":"Defualt",
+	"imeautochange.gui.configscreen.button.cancel":"Cancel",
 	"imeautochange.gui.configscreen.button.configelementenabled":"Enabled",
 	"imeautochange.gui.configscreen.button.configelementdisabled":"Disabled",
+	"imeautochange.gui.configscreen.button.refreshimelist":"Refresh",
 	
-	"imeautochange.config.ingamegui":"In Game Gui",
-	"imeautochange.config.editbookscreen":"Edit Book Screen",
-	"imeautochange.config.editsignscreen":"Edit Sign Screen"
+	"imeautochange.config.ingamegui":"In Game",
+	"imeautochange.config.editbookscreen":"Edit Book",
+	"imeautochange.config.editsignscreen":"Edit Sign",
+	"imeautochange.config.anvilscreen":"Anvil",
+	"imeautochange.config.creativescreen":"Creative",
+	"imeautochange.config.jeiingredientlistoverlay":"JEI"
 }

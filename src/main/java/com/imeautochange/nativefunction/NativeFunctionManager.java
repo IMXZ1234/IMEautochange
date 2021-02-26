@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.imeautochange.IMEautochange;
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.util.OSChecker;
 
@@ -132,23 +131,32 @@ public class NativeFunctionManager
 		return getIMEInfoList(true);
 	}
 	
+	
+	public static boolean reloadIMEInfoList() {
+		if (!nativeFunctionProvider.reloadIMEList()) {
+			LOGGER.error("Unsuspected error on reloading IME list.");
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Returns maintained IMEInfoList.
+	 * 
 	 * @param reload If internal IME List should be reloaded.
-	 * @return
 	 */
 	public static ArrayList<IMEInfo> getIMEInfoList(boolean reload) {
-		if(reload) {
-			if(!nativeFunctionProvider.reloadIMEList()) {
+		if (reload) {
+			if (!nativeFunctionProvider.reloadIMEList()) {
 				LOGGER.error("Unsuspected error on reloading IME list.");
 			}
 		}
-		if(!nativeFunctionProvider.getIMEInfoList(imeInfoList)) {
+		if (!nativeFunctionProvider.getIMEInfoList(imeInfoList)) {
 			LOGGER.error("Unsuspected error on getting IME list.");
 		}
 		return imeInfoList;
 	}
-	
+
 	public static IMEInfo getDefaultIME() {
 		if(!nativeFunctionProvider.getDefaultIME(defaultIME)) {
 			LOGGER.error("Unsuspected error on getting default IME.");

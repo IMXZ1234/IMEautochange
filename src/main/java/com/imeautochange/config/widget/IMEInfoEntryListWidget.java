@@ -3,17 +3,13 @@ package com.imeautochange.config.widget;
 import com.imeautochange.config.ConfigScreen;
 import com.imeautochange.config.IMEInfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.LanguageMap;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.client.gui.widget.ModListWidget.ModEntry;
 
 public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.IMEInfoEntry> {
 	
@@ -28,20 +24,28 @@ public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.
     }
 
     @Override
-    protected int getScrollbarPosition()
-    {
-        return this.listWidth;
-    }
+    public int getScrollbarPosition() {
+        return this.x1;
+     }
 
     @Override
     public int getRowWidth()
     {
         return this.listWidth;
     }
+    
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    	System.out.println("IMEInfoEntryListWidget mouse clicked");
+    	return super.mouseClicked(mouseX, mouseY, button);
+    }
 
     public void refreshList() {
         this.clearEntries();
-        parent.refreshIMEInfoList(this::addEntry, imeInfo->new IMEInfoEntry(imeInfo));
+//        parent.refreshIMEInfoList(this::addEntry, imeInfo->new IMEInfoEntry(imeInfo));
+        for(IMEInfo imeInfo : parent.getIMEList()) {
+        	addEntry(new IMEInfoEntry(imeInfo));
+        }
     }
 
     @Override
@@ -58,6 +62,10 @@ public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.
         IMEInfoEntry(IMEInfo imeInfo){
         	this.imeInfo = imeInfo;
         }
+        
+        public IMEInfo getIMEInfo() {
+			return imeInfo;
+		}
         
     	@Override
     	public void render(MatrixStack mStack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {

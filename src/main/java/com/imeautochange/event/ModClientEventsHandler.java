@@ -4,10 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.imeautochange.compat.ICompatOverlayAdapter;
-import com.imeautochange.config.IMEInfo;
-
-import net.minecraft.client.gui.screen.Screen;
+import com.imeautochange.compat.IOverlayAdapter;
 
 public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase {
 	
@@ -20,15 +17,15 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 	
 //	protected HashMap<Class<?>, HashMap<Field, IMEInfo>> listenerClasses;
 	protected HashMap<Class<?>, String> screenIMETable;
-	protected HashMap<ICompatOverlayAdapter, String> overlayIMETable;
+	protected HashMap<IOverlayAdapter, String> overlayIMETable;
 	public HashMap<Class<?>, ArrayList<Field>> cachedScreenFieldTable = new HashMap<Class<?>, ArrayList<Field>>();
-	public HashMap<ICompatOverlayAdapter, ArrayList<Field>> cachedOverlayFieldList = new HashMap<ICompatOverlayAdapter, ArrayList<Field>>();
+	public HashMap<IOverlayAdapter, ArrayList<Field>> cachedOverlayFieldList = new HashMap<IOverlayAdapter, ArrayList<Field>>();
 
 	public ModClientEventsHandler() {
 		isRegistered = false;
 //		listenerClasses = new HashMap<Class<?>, HashMap<Field, IMEInfo>>();
 		screenIMETable = new HashMap<Class<?>, String>();
-		overlayIMETable = new HashMap<ICompatOverlayAdapter, String>();
+		overlayIMETable = new HashMap<IOverlayAdapter, String>();
 	}
 	
 //	public int addListenerField(Class<?> clazz, Field field, IMEInfo imeInfo) {
@@ -65,6 +62,7 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 //	}
 //	
 	public int addScreenListenerClass(Class<?> clazz, String imeName) {
+		System.out.println("addScreenListenerClass "+imeName);
 		String last;
 		last = screenIMETable.put(clazz, imeName);
 		if (last != null) {
@@ -77,7 +75,8 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 			return RESULT_SUCCESS;
 		}
 	}
-	public int addOverlayListenerClass(ICompatOverlayAdapter overlayAdapter, String imeName) {
+	public int addOverlayListenerClass(IOverlayAdapter overlayAdapter, String imeName) {
+		System.out.println("addOverlayListenerClass "+imeName);
 		String last;
 		last = overlayIMETable.put(overlayAdapter, imeName);
 		if (last != null) {
@@ -101,7 +100,7 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 		}
 	}
 	
-	public int removeOverlayListenerClass(ICompatOverlayAdapter overlayAdapter) {
+	public int removeOverlayListenerClass(IOverlayAdapter overlayAdapter) {
 		String last;
 		last = overlayIMETable.remove(overlayAdapter);
 		if(last == null) {

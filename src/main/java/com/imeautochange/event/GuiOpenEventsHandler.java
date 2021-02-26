@@ -1,7 +1,6 @@
 package com.imeautochange.event;
 
 
-import com.imeautochange.config.IMEInfo;
 import com.imeautochange.nativefunction.NativeFunctionManager;
 
 import net.minecraft.client.gui.IngameGui;
@@ -28,6 +27,7 @@ public class GuiOpenEventsHandler extends ModClientEventsHandler {
 	
 	@Override
 	public int addScreenListenerClass(Class<?> clazz, String imeName) {
+		System.out.println("addScreenListenerClass"+imeName+clazz.getName());
 		if(clazz.isAssignableFrom(IngameGui.class)){
 			System.out.println("IngameGui");
 			IngameGuiIMEName = imeName;

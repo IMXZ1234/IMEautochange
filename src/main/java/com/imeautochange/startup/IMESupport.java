@@ -4,7 +4,6 @@ import com.imeautochange.ModFunctionManager;
 import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.config.ConfigManager;
 import com.imeautochange.event.EventsHandlerManager;
-import com.imeautochange.event.ModClientEventsHandler;
 import com.imeautochange.event.ModClientEventsHandlerBase;
 
 public abstract class IMESupport {
@@ -26,9 +25,11 @@ public abstract class IMESupport {
 			handlerNum = handlerDescriptions.length;
 		}
 		for (int i = 0; i < handlerNum; i++) {
+			System.out.println(handlerDescriptions[i]);
 			EventsHandlerManager.registerHandler(handlerDescriptions[i], handlers[i]);
 		}
 		for (int i = 0; i < classConfigInfos.length; i++) {
+			System.out.println("initIMESupport"+classConfigInfos);
 			ConfigManager.registerClassConfigInfo(classConfigInfos[i]);
 		}
 	}

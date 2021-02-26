@@ -13,13 +13,10 @@ import com.imeautochange.config.ConfigManager;
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.config.ModKeyBinding;
 import com.imeautochange.event.EventsHandlerManager;
-import com.imeautochange.event.GuiOpenEventsHandler;
 import com.imeautochange.event.KeyBindingInputEventsHandler;
-import com.imeautochange.event.KeyboardEventsHandler;
 import com.imeautochange.event.ModClientEventsHandler;
 import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.event.ModClientEventsHandlerSpecific;
-import com.imeautochange.event.MouseEventsHandler;
 import com.imeautochange.nativefunction.NativeFunctionManager;
 import com.imeautochange.startup.BuiltInSupport;
 import com.imeautochange.startup.IMESupportManager;
@@ -35,7 +32,7 @@ public class ModFunctionManager {
 	private static HashMap<String, ModClientEventsHandlerBase> eventsHandlers;
 	private static ArrayList<IMEInfo> imeInfoList;
 	private static String defaultIMEName;
-	private static String EnglishIMEName;
+	private static String englishIMEName;
 	public static boolean isFunctionEnabled() {
 		return modFunctionEnabled;
 	}
@@ -47,9 +44,13 @@ public class ModFunctionManager {
 			return;
 		}
 		defaultIMEName = NativeFunctionManager.getDefaultIME().name;
-		if(!NativeFunctionManager.isIMEInstalled(defaultIMEName)) {
-			defaultIMEName = NativeFunctionManager.getIMEInfoList().get(0).name;
-		}
+//		if(!NativeFunctionManager.isIMEInstalled(defaultIMEName)) {
+//			defaultIMEName = NativeFunctionManager.getIMEInfoList().get(0).name;
+//		}
+		englishIMEName = NativeFunctionManager.getEnglishIME().name;
+//		if(!NativeFunctionManager.isIMEInstalled(englishIMEName)) {
+//			defaultIMEName = NativeFunctionManager.getIMEInfoList().get(0).name;
+//		}
 		// Already reloaded during initialization of NativeFunctionManager.
 		imeInfoList = NativeFunctionManager.getIMEInfoList(false);
 		modFunctionEnabled = true;
@@ -58,11 +59,14 @@ public class ModFunctionManager {
 		IMESupportManager.registerIMESupport(new BuiltInModSupport());
 		IMESupportManager.initAllIMESupports();
 		// Initialize members(get a reference from other managers)
-	    listenerClassConfigInfo = ConfigManager.getListenerClassConfigInfo();
-	    eventsHandlers = EventsHandlerManager.getEventsHandlers();
+		listenerClassConfigInfo = ConfigManager.getListenerClassConfigInfo();
+		eventsHandlers = EventsHandlerManager.getEventsHandlers();
+		// Load Configuration
+		ConfigManager.updateConfigFromFile();
 	    // Initialize Events Handlers
 //	    updateHandlersListenerTable(listenerClassConfigInfo);
 	    updateHandlersCachedFieldList();
+	    updateHandlersListenerTable(listenerClassConfigInfo);
 	    for(Map.Entry<String, ModClientEventsHandlerBase> entry : eventsHandlers.entrySet()) {
 	    	entry.getValue().register();
 	    }
@@ -88,7 +92,7 @@ public class ModFunctionManager {
 	}
 	
 	public static String getEnglishIMEName() {
-		return EnglishIMEName;
+		return englishIMEName;
 	}
 	
 	public static void updateHandlersCachedFieldList() {
@@ -117,13 +121,14 @@ public class ModFunctionManager {
 		}
 	}
 	
-	public static void loadConfigFromFile() {
-		ConfigManager.loadFromConfigFile();
-	}
+//	public static void loadConfigFromFile() {
+//		ConfigManager.loadFromConfigFile();
+//	}
 	
 	public static void updateHandlersListenerTable(HashMap<Class<?>, ClassConfigInfo> cachedChanges) {
 		for (Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : cachedChanges.entrySet()) {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
+			System.out.println("updateHandlersListenerTable:\n"+classConfigInfo);
 			for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
 				ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(configItemsEntry.getKey());
 				if (handler != null) {
@@ -154,6 +159,7 @@ public class ModFunctionManager {
 	}
 
 	public static void updateHandlersListenerTable(ClassConfigInfo classConfigInfo) {
+		System.out.println("updateHandlersListenerTable:\n"+classConfigInfo);
 		for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
 			ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(configItemsEntry.getKey());
 			if (handler != null) {

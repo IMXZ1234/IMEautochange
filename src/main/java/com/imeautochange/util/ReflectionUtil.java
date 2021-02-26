@@ -3,10 +3,6 @@ package com.imeautochange.util;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedList;
-
-import mezz.jei.gui.overlay.IngredientListOverlay;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 
 public class ReflectionUtil 
 {

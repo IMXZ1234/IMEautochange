@@ -1,6 +1,5 @@
 package com.imeautochange.event;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;

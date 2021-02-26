@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.minecraft.client.gui.widget.TextFieldWidget;
+
 /**
  * Put this before your IME-aware Gui classes to enable IMEautochange functionality.
  * Fields in class with this annotation will be checked 

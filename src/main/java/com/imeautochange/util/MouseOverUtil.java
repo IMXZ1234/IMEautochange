@@ -5,14 +5,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 public class MouseOverUtil {
 
 	public static boolean isMouseOverTextFieldWidget(TextFieldWidget textField, double mouseX, double mouseY) {
-		System.out.println("mouseX"+mouseX);
-		System.out.println("mouseY"+mouseY);
-		System.out.println("textField.x"+textField.x);
-		System.out.println("textField.y"+textField.y);
-		System.out.println("textField.width"+textField.getWidth());
-		System.out.println("textField.height"+textField.getHeightRealms());
-		
-		// TODO Auto-generated method stub
 		return mouseX >= textField.x && mouseY >= textField.y && mouseX < textField.x + textField.getWidth() && mouseY < textField.y + textField.getHeightRealms();
 	}
 //	/**

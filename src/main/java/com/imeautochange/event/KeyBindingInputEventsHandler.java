@@ -1,23 +1,16 @@
 package com.imeautochange.event;
 
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.imeautochange.IMEautochange;
 import com.imeautochange.config.ConfigScreen;
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.config.ModKeyBinding;
 import com.imeautochange.nativefunction.NativeFunctionManager;
+import com.imeautochange.startup.IMESupportManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
@@ -31,6 +24,7 @@ public class KeyBindingInputEventsHandler extends ModClientEventsHandlerBase {
 	public void onKeyBindingInputEvent(KeyInputEvent event) {
 		if (ModKeyBinding.OPEN_CHAT_WITH_IME_TOGGLED.isPressed()) {
 			System.out.println("OPEN_CHAT_WITH_IME_TOGGLED");
+			IMESupportManager.initAllIMESupports();
 //			ArrayList<IMEInfo> imeInfo = NativeFunctionManager.getIMEInfoList();
 //			Iterator<IMEInfo> iter = imeInfo.iterator();
 //			while (iter.hasNext()) {

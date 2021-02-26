@@ -1,24 +1,19 @@
 package com.imeautochange.nativefunction;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-import java.util.jar.Attributes.Name;
 
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.nativefunction.windows.COMHelper;
 import com.imeautochange.nativefunction.windows.COMInterface;
 import com.imeautochange.nativefunction.windows.COMInterfaceITfInputProcessorProfiles;
-import com.imeautochange.nativefunction.windows.GUID;
 import com.imeautochange.nativefunction.windows.Input;
 import com.imeautochange.nativefunction.windows.LAYOUTORTIPPROFILE;
 import com.imeautochange.nativefunction.windows.Win32Util;
-import com.imeautochange.util.JsonUtil;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.ShortByReference;
 
@@ -169,7 +164,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(lpLayoutOrTipProfile[i]));
 			Input.INSTANCE.GetLayoutDescription(lpLayoutOrTipProfile[i].szId, pszName, uBufLength, 0);
 			System.out.println(String.valueOf(pszName)+"\n");
-			String name = String.valueOf(pszName);
+			String name = String.valueOf(pszName).trim();
 			if (lpLayoutOrTipProfile[i].dwProfileType == LAYOUTORTIPPROFILE.LOTP_KEYBOARDLAYOUT) {
 				keyboardLayoutProfileTable.put(name, lpLayoutOrTipProfile[i]);
 			} else {
@@ -229,7 +224,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			LAYOUTORTIPPROFILE profile = entry.getValue();
 			// Add to imeInfoList only if the profile is enabled.
 			if ((profile.dwFlags & LAYOUTORTIPPROFILE.LOT_DISABLED) == 0) {
-				imeInfoList.add(new IMEInfo(entry.getKey(), String.valueOf(profile.szId),
+				imeInfoList.add(new IMEInfo(entry.getKey(), String.valueOf(profile.szId).trim(),
 						String.format("%04X", profile.langid),
 						Win32Util.flagsToString(profile.dwProfileType, LAYOUTORTIPPROFILE.dwProfileTypeBitFlags)));
 			}
@@ -275,7 +270,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			return false;
 		}
 		imeInfo.name = defaultProfileName;
-		imeInfo.id = String.valueOf(defaultProfile.szId);
+		imeInfo.id = String.valueOf(defaultProfile.szId).trim();
 		imeInfo.data = new String[] { String.format("%04X", defaultProfile.langid),
 				Win32Util.flagsToString(defaultProfile.dwProfileType, LAYOUTORTIPPROFILE.dwProfileTypeBitFlags) };
 		System.out.println("getDefaultIME \n"+imeInfo);
@@ -348,7 +343,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			return RESULT_ERROR;
 		}
 		imeInfo.name = englishProfileName;
-		imeInfo.id = String.valueOf(englishProfile.szId);
+		imeInfo.id = String.valueOf(englishProfile.szId).trim();
 		imeInfo.data = new String[] { String.format("%04X", englishProfile.langid),
 				Win32Util.flagsToString(englishProfile.dwProfileType, LAYOUTORTIPPROFILE.dwProfileTypeBitFlags) };
 		System.out.println("getEnglishIME \n"+imeInfo);

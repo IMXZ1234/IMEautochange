@@ -4,35 +4,31 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-import com.imeautochange.compat.ICompatOverlayAdapter;
+import com.imeautochange.compat.IOverlayAdapter;
 import com.imeautochange.nativefunction.NativeFunctionManager;
-import com.imeautochange.util.MouseOverUtil;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MouseEventsHandler extends ModClientEventsHandler {
 	private ArrayList<TextFieldWidget> textFieldWidgets = new ArrayList<TextFieldWidget>();
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onMouseClickedEvent(MouseClickedEvent event) {
 		Screen screen = event.getGui();
 		Class<?> screenClass = screen.getClass();
-		System.out.println(screenClass.getName());
 		double mouseX = event.getMouseX();
 		double mouseY = event.getMouseY();
-		ICompatOverlayAdapter overlayAdapter;
-		for(Entry<ICompatOverlayAdapter, String> entry : overlayIMETable.entrySet()) {
+		IOverlayAdapter overlayAdapter;
+		for(Entry<IOverlayAdapter, String> entry : overlayIMETable.entrySet()) {
 			overlayAdapter = entry.getKey();
 			if(overlayAdapter.isOverlayDisplayed()) {
 				overlayAdapter.getTextFieldWidgets(textFieldWidgets);
 				for (TextFieldWidget textField : textFieldWidgets) {
-					System.out.println("textField!");
 					if (textField.getVisible()) {
-						System.out.println("visible!");
-						if (MouseOverUtil.isMouseOverTextFieldWidget(textField, mouseX, mouseY)) {
-							System.out.println("in!");
+						if (textField.isMouseOver(mouseX, mouseY)) {
 							NativeFunctionManager.switchIMETo(overlayIMETable.get(entry.getKey()));
 							return;
 						}
@@ -48,12 +44,8 @@ public class MouseEventsHandler extends ModClientEventsHandler {
 			TextFieldWidget textField;
 			try {
 				textField = (TextFieldWidget) field.get(screen);
-				System.out.println("textField!");
-				System.out.println("field name "+field.getName());
 				if (textField.getVisible()) {
-					System.out.println("visible!");
-					if (MouseOverUtil.isMouseOverTextFieldWidget(textField, mouseX, mouseY)) {
-						System.out.println("in!");
+					if (textField.isMouseOver(mouseX, mouseY)) {
 						NativeFunctionManager.switchIMETo(imeName);
 						return;
 					}
