@@ -60,6 +60,7 @@ import com.sun.jna.ptr.ShortByReference;
  *
  */
 public final class WindowsNativeFunctionProvider implements INativeFunctionProvider {
+	public static final String GUID_REGEX = "[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}";
 	private static HashMap<String, LAYOUTORTIPPROFILE> profileTable;
 	private static LAYOUTORTIPPROFILE defaultProfile;
 	private static String defaultProfileName;
@@ -91,25 +92,23 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			return RESULT_NOTINSTALLED;
 		}
 		int hResult;
-		System.out.println("profile.langid "+profile.langid);
 		ShortByReference langid = new ShortByReference();
 		IntByReference bEnable = new IntByReference();
 		
 		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.IsEnabledLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, bEnable);
-		if(hResult!=COMInterface.S_OK) {
-			System.out.println("IsEnabledLanguageProfile error");
-			return RESULT_ERROR;
-		}else {
-			System.out.println("IsEnabledLanguageProfile "+bEnable.getValue());
-		}
+//		if(hResult!=COMInterface.S_OK) {
+//			return RESULT_ERROR;
+//		}else {
+//			System.out.println("IsEnabledLanguageProfile "+bEnable.getValue());
+//		}
 		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.GetCurrentLanguage(langid);
-		System.out.println("IsEnabledLanguageProfile hResult "+hResult);
-		if(hResult!=COMInterface.S_OK) {
-			System.out.println("GetCurrentLanguage error");
-			return RESULT_ERROR;
-		}else {
-			System.out.println("GetCurrentLanguage " + langid.getValue());
-		}
+//		System.out.println("IsEnabledLanguageProfile hResult "+hResult);
+//		if(hResult!=COMInterface.S_OK) {
+//			System.out.println("GetCurrentLanguage error");
+//			return RESULT_ERROR;
+//		}else {
+//			System.out.println("GetCurrentLanguage " + langid.getValue());
+//		}
         if (profile.langid != langid.getValue()) {
         	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ChangeCurrentLanguage(profile.langid);
         	if(hResult!=COMInterface.S_OK) {
@@ -150,6 +149,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	 */
 	@Override
 	public boolean reloadIMEList() {
+		profileTable.clear();
 		LAYOUTORTIPPROFILE lpLayoutOrTipProfile[];
 		
 		int num = Input.INSTANCE.EnumEnabledLayoutOrTip(null, null, null, null, 0);
@@ -161,9 +161,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 		char pszName[] = new char[64];
 		IntByReference uBufLength = new IntByReference(64);
 		for(int i=0;i<num;i++) {
-			System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(lpLayoutOrTipProfile[i]));
 			Input.INSTANCE.GetLayoutDescription(lpLayoutOrTipProfile[i].szId, pszName, uBufLength, 0);
-			System.out.println(String.valueOf(pszName)+"\n");
 			String name = String.valueOf(pszName).trim();
 			if (lpLayoutOrTipProfile[i].dwProfileType == LAYOUTORTIPPROFILE.LOTP_KEYBOARDLAYOUT) {
 				keyboardLayoutProfileTable.put(name, lpLayoutOrTipProfile[i]);
@@ -195,13 +193,13 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 				profileTable.put(entry.getKey(), profile);
 			}
 		}
-//		Iterator<Entry<String, LAYOUTORTIPPROFILE>> iter2 = profileTable.entrySet().iterator();
-//		Map.Entry<String, LAYOUTORTIPPROFILE> entry2;
-//		while (iter2.hasNext()) {
-//			entry2 = (Entry<String, LAYOUTORTIPPROFILE>) iter2.next();
-//			LAYOUTORTIPPROFILE profile = entry2.getValue();
-//			System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
-//		}
+		Iterator<Entry<String, LAYOUTORTIPPROFILE>> iter2 = profileTable.entrySet().iterator();
+		Map.Entry<String, LAYOUTORTIPPROFILE> entry2;
+		while (iter2.hasNext()) {
+			entry2 = (Entry<String, LAYOUTORTIPPROFILE>) iter2.next();
+			LAYOUTORTIPPROFILE profile = entry2.getValue();
+			System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
+		}
 		return true;
 	}
 	
@@ -246,8 +244,10 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	/**
 	 * The IME is searched by following logic:
 	 * (1) If there is System Default IME in profileTable, copy it to imeInfo.
-	 * (2) If System Default IME doesn't exist in profileTable, copy an arbitrary text service in profileTable to imeInfo.
-	 * (3) If no profile exists(profileTable is empty), return false. imeInfo will not be altered.
+	 * (2) If System Default IME doesn't exist in profileTable, find an arbitrary zh_cn input processor(szId: 0804:{GUID}{GUID}).
+	 * (3) If no Chinese input processor exist, find an arbitrary input processor in profileTable(szId: XXXX:{GUID}{GUID}).
+	 * (4) If no input processor exist, find an arbitrary profile.
+	 * (5) If no profile exists(profileTable is empty), return false. imeInfo will not be altered.
 	 * In fact, there will always be one enabled IME, (3) will never happen, which means 
 	 * imeInfo will always be filled with value with meaning.
 	 */
@@ -257,12 +257,34 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			return false;
 		}
 		if(defaultProfile == null) {
-			if(profileTable.size()!=0) {
-				// Copy the first one in profileTable.
-				for(Map.Entry<String, LAYOUTORTIPPROFILE> entry : profileTable.entrySet()) {
-					defaultProfile = entry.getValue();
-					defaultProfileName = entry.getKey();
+			boolean doesIPExist = false;
+			boolean doesProfileExist = false;
+			String name;
+			LAYOUTORTIPPROFILE profile;
+			String szId;
+			for (Map.Entry<String, LAYOUTORTIPPROFILE> entry : profileTable.entrySet()) {
+				name = entry.getKey();
+				profile = entry.getValue();
+				szId = String.valueOf(profile.szId);
+				System.out.println("szId: "+szId);
+				System.out.println("szId.length"+szId.length());
+				szId = szId.trim();
+				System.out.println("szId: "+szId);
+				System.out.println("szId.length"+szId.length());
+				if(szId.matches("0804:\\{"+GUID_REGEX+"\\}\\{"+GUID_REGEX+"\\}")) {
+					defaultProfile = profile;
+					defaultProfileName = name;
 					break;
+				}else if(!doesIPExist) {
+					if(szId.matches("[a-fA-F0-9]{4}:\\{"+GUID_REGEX+"\\}\\{"+GUID_REGEX+"\\}")) {
+						defaultProfile = profile;
+						defaultProfileName = name;
+						doesIPExist = true;
+					}else if(!doesProfileExist) {
+						defaultProfile = profile;
+						defaultProfileName = name;
+						doesProfileExist = true;
+					}
 				}
 			}
 		}
@@ -279,11 +301,11 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	
 	/**
 	 * The IME is searched by following logic:
-	 * (1) If en_us keyboard layout(szId: 0409:0x00000409) exists in profileTable, it is copied to imeInfo.
-	 * (2) If en_us doesn't exist, find an English qwerty keyboard layout(szId: XX09:0x0000XX09).
-	 * (3) If no English qwerty keyboard layout exists, find an arbitrary English keyboard layout(szId: XX09:0xXXXXXX09).
-	 * (4) If no English keyboard layout exists, copy an arbitrary keyboard layout to imeInfo(szId: XXXX:0xXXXXXXXX).
-	 * (5) If no keyboard layout exists, copy an arbitrary input processor to imeInfo(szId: XXXX:{GUID}{GUID}).
+	 * (1) If en_us keyboard layout(szId: 0409:00000409) exists in profileTable, it is copied to imeInfo.
+	 * (2) If en_us doesn't exist, find an English qwerty keyboard layout(szId: XX09:0000XX09).
+	 * (3) If no English qwerty keyboard layout exists, find an arbitrary English keyboard layout(szId: XX09:XXXXXX09).
+	 * (4) If no English keyboard layout exists, find an arbitrary keyboard layout(szId: XXXX:XXXXXXXX).
+	 * (5) If no keyboard layout exists, find an arbitrary profile.
 	 * (6) If no profile exists, returns false. imeInfo will not be altered.
 	 * In fact, there will always be one enabled IME, (6) will never happen, which means 
 	 * imeInfo will always be filled with value with meaning.

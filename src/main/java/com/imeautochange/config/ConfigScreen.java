@@ -94,9 +94,13 @@ public class ConfigScreen extends Screen {
     	System.out.println("IMEInfoEntry selected");
         this.selectedIMEInfoEntry = entry;
         String imeName = entry.getIMEInfo().name;
+        System.out.println("imeName "+imeName);
 		if (selectedStatic != null) {
 			this.selectedStatic.setText(imeName);
 			addConfigChangeToCache(selectedListenerClassEntry.getClazz(), selectedStatic.getId(), imeName);
+			System.out.println("addConfigChangeToCache imeName");
+			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(selectedStatic.getId()).imeName);
+			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), selectedStatic.getId(), imeName));
 		}
     }
     
@@ -105,21 +109,7 @@ public class ConfigScreen extends Screen {
     	System.out.println("ListenerClassEntry selected");
     	this.selectedListenerClassEntry = entry;
     	classConfigInfoPanel.refreshDisplayedClassConfigInfo(selectedListenerClassEntry.getClazz(), getClassConfigInfoForDisplay());
-    	int i = (int)(this.mc.mouseHelper.getMouseX() * (double)this.mc.getMainWindow().getScaledWidth() / (double)this.mc.getMainWindow().getWidth());
-        int j = (int)(this.mc.mouseHelper.getMouseY() * (double)this.mc.getMainWindow().getScaledHeight() / (double)this.mc.getMainWindow().getHeight());
-//    	renderExtendedChildren(new MatrixStack(), i, j, mc.getTickLength());
     }
-    
-//    private void renderExtendedChildren(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-//    	for(Widget child:extendedChildren) {
-//    		child.render(matrixStack, mouseX, mouseY, mc.getTickLength());
-//    	}
-//    	int y = configItemStartyPos;
-//    	for (String configItemName:configItemNameList) {
-//    		font.func_238422_b_(matrixStack, new TranslationTextComponent(configItemName).func_241878_f(), classDisplayNameCenterxPos - font.getStringWidth(configItemName) / 2, y, 0xFFFFFF);
-//    		y += configItemyPosInterval;
-//    	}
-//	}
 	
 	private void addConfigChangeToCache(Class<?> clazz, String configItemName, boolean enabled) {
 		ClassConfigInfo classConfigInfoCachedChanges = cachedChanges.get(clazz);
@@ -185,9 +175,9 @@ public class ConfigScreen extends Screen {
         
         this.confirmButton = new Button(this.width / 2 - 150, y1 + PADDING, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.confirm"), (button)->confirmChanges()) ;
         this.addButton(confirmButton);
-        this.defaultButton = new Button(this.width / 2 - 40, y1 + PADDING, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.default"), (button)->cancel()) ;
+        this.defaultButton = new Button(this.width / 2 - 40, y1 + PADDING, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.default"), (button)->resetToDefault()) ;
         this.addButton(defaultButton);
-        this.cancelButton = new Button(this.width / 2 + 70, y1 + PADDING, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.cancel"), (button)->resetToDefault()) ;
+        this.cancelButton = new Button(this.width / 2 + 70, y1 + PADDING, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.cancel"), (button)->cancel()) ;
         this.addButton(cancelButton);
         this.refreshIMEListButton = new Button(PADDING + imeInfoEntryListWidth / 2 - 40, y0, 80, 20, new TranslationTextComponent("imeautochange.gui.configscreen.button.refreshimelist"), (button)->refreshIMEList()) ;
         this.addButton(refreshIMEListButton);
@@ -211,21 +201,27 @@ public class ConfigScreen extends Screen {
 		this.classConfigInfoPanel.render(matrixStack, mouseX, mouseY, partialTicks);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 	}
+	
+	@Override
+	public void closeScreen() {
+		cachedChanges.clear();
+		this.minecraft.displayGuiScreen((Screen) null);
+	}
 
-	private Object confirmChanges() {
+	private void confirmChanges() {
 		ConfigManager.updateConfigChanges(cachedChanges);
 		closeScreen();
-		return null;
 	}
 
-	private Object resetToDefault() {
+	private void resetToDefault() {
 		cachedChanges.clear();
-		return null;
+		if(selectedListenerClassEntry != null) {
+			classConfigInfoPanel.refreshDisplayedClassConfigInfo(selectedListenerClassEntry.getClazz(), getClassConfigInfoForDisplay());
+		}
 	}
 
-	private Object cancel() {
+	private void cancel() {
 		closeScreen();
-		return null;
 	}
 
 	private Object refreshIMEList() {
@@ -238,7 +234,7 @@ public class ConfigScreen extends Screen {
 		public final int PADDING =6;
 		private int classDisplayNameCenterxPos;
 		private final int configItemStartyPos = 3 * PADDING + font.FONT_HEIGHT * 2 + 10;
-		private final int configItemyPosInterval = 3 * PADDING + font.FONT_HEIGHT + 40;
+		private final int configItemyPosInterval = 3 * PADDING + font.FONT_HEIGHT + 20;
 		
 		private List<Widget> children = new LinkedList<Widget>();
 		private Class<?> dislpayedClazz;
@@ -247,6 +243,7 @@ public class ConfigScreen extends Screen {
 		public void refreshDisplayedClassConfigInfo(Class<?> dislpayedClazz, ClassConfigInfo displayedClassConfigInfo) {
 			this.dislpayedClazz = dislpayedClazz;
 			this.displayedClassConfigInfo = displayedClassConfigInfo;
+			configItemNameList.clear();
 			children.clear();
 			HashMap<String, ConfigItem> configItems = displayedClassConfigInfo.configItems;
 	    	int y = configItemStartyPos;
@@ -257,16 +254,26 @@ public class ConfigScreen extends Screen {
 	    								 : new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementdisabled"), 
 	    		(button)->{
 	            	System.out.println("button pressed "+((IdentifiableButton)button).getId());
-	            	ConfigItem oldConfigItem = selectedListenerClassEntry.getClassConfigInfo().configItems.get(((IdentifiableButton)button).getId());
+	            	ConfigItem oldConfigItem = getClassConfigInfoForDisplay().configItems.get(((IdentifiableButton)button).getId());
+	            	System.out.println("old config: "+oldConfigItem.enabled);
 	            	boolean newEnabledState = !oldConfigItem.enabled;
 	            	button.setMessage(newEnabledState ? new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementenabled")
 	    								 : new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementdisabled"));
 	            	addConfigChangeToCache(selectedListenerClassEntry.getClazz(), ((IdentifiableButton)button).getId(), newEnabledState);
+	            	System.out.println("addConfigChangeToCache enabled");
+	    			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(((IdentifiableButton)button).getId()).enabled);
+	    			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), ((IdentifiableButton)button).getId(), newEnabledState));
 	            }, entry.getKey()));
-	    		children.add(new SelectableStaticTextField(font, classDisplayNameCenterxPos - 20 + PADDING, y, 100, 20, new StringTextComponent(entry.getValue().imeName), (staticTextField)->{
-	    			System.out.println("static pressed "+staticTextField.getText());
-	    			selectedStatic = staticTextField;
-	    		}, entry.getValue().imeName));
+	    		SelectableStaticTextField selectableTextField = 
+	    			new SelectableStaticTextField(font, classDisplayNameCenterxPos - 20 + PADDING, y, 100, 20, new StringTextComponent(entry.getValue().imeName), 
+								(staticTextField) -> {
+									System.out.println("static pressed " + staticTextField.getText());
+									selectedStatic = staticTextField;
+									System.out.println("set selectedStatic:"+ selectedStatic.getId());
+								}, 
+	    					entry.getKey());
+	    		selectableTextField.setText(entry.getValue().imeName);
+	    		children.add(selectableTextField);
 	    		y += configItemyPosInterval;
 	    	}
 		}
@@ -274,16 +281,14 @@ public class ConfigScreen extends Screen {
 		public ClassConfigInfoPanel(Minecraft client, int width, int height, int top, int left) {
 			super(client, width, height, top, left);
 			classDisplayNameCenterxPos = left + width / 2;
+			if (selectedListenerClassEntry != null) {
+				refreshDisplayedClassConfigInfo(selectedListenerClassEntry.getClazz(), getClassConfigInfoForDisplay());
+			}
 		}
 
 		@Override
 		protected int getContentHeight() {
-			int contentHeight = 0;
-			for (Widget child:children) {
-				contentHeight += child.getHeightRealms();
-				contentHeight += PADDING;
-			}
-			return contentHeight;
+			return children.size() * configItemyPosInterval / 2;
 		}
 
 		@Override
@@ -308,15 +313,29 @@ public class ConfigScreen extends Screen {
 		}
 		@Override
 	    protected boolean clickPanel(double mouseX, double mouseY, int button) { 
+			System.out.println("mouseX "+mouseX);
+	        System.out.println("mouseY "+mouseY);
+			double screenMouseX = mouseX + left;
+			double screenMouseY = mouseY + this.top - (int)this.scrollDistance + border;
+			System.out.println("screenMouseX "+screenMouseX);
+	        System.out.println("screenMouseY "+screenMouseY);
 			for(Widget child:children) {
 				System.out.println("checking "+child.getMessage());
-				if(child.isMouseOver(mouseX, mouseY)) {
-					System.out.println("is over");
-					return child.mouseClicked(mouseX, mouseY, button);
+				if(child.mouseClicked(screenMouseX, screenMouseY, button)) {
+					System.out.println("handled");
+					return true;
 				}
 			}
-			return super.mouseClicked(mouseX, mouseY, button);
+			System.out.println("not handled");
+			return false;
 		}
+		
+		 @Override
+		    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		        System.out.println("mouseX "+mouseX);
+		        System.out.println("mouseY "+mouseY);
+		        return super.mouseClicked(mouseX, mouseY, button);
+		    }
 
 		
 		public void addWidget(Widget widget) {

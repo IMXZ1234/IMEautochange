@@ -36,7 +36,9 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
     	System.out.println("ListenerClassEntryListWidget mouse clicked");
-    	return super.mouseClicked(mouseX, mouseY, button);
+    	boolean result = super.mouseClicked(mouseX, mouseY, button);
+    	System.out.println("result: "+result);
+    	return result;
     }
 
     @Override

@@ -37,13 +37,15 @@ public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
     	System.out.println("IMEInfoEntryListWidget mouse clicked");
-    	return super.mouseClicked(mouseX, mouseY, button);
+    	boolean result = super.mouseClicked(mouseX, mouseY, button);
+    	System.out.println("result: "+result);
+    	return result;
     }
 
     public void refreshList() {
         this.clearEntries();
-//        parent.refreshIMEInfoList(this::addEntry, imeInfo->new IMEInfoEntry(imeInfo));
         for(IMEInfo imeInfo : parent.getIMEList()) {
+        	System.out.println(imeInfo);
         	addEntry(new IMEInfoEntry(imeInfo));
         }
     }

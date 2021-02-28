@@ -67,11 +67,14 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 		last = screenIMETable.put(clazz, imeName);
 		if (last != null) {
 			if (last.equals(imeName)) {
+				System.out.println("not changed");
 				return RESULT_SUCCESS;
 			} else {
+				System.out.println("replaced");
 				return RESULT_CLASS_REPLACED | RESULT_SUCCESS;
 			}
 		}else {
+			System.out.println("newly added");
 			return RESULT_SUCCESS;
 		}
 	}

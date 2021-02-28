@@ -12,6 +12,7 @@ import com.imeautochange.config.ConfigItem;
 public class ConfigUtil {
 	public static final String IMENAME = "IME";
 	public static final String ISENABLED = "Enabled";
+	
 	public static boolean updateConfigByClassConfigInfo(ClassConfigInfo classConfigInfo, Config config) {
 		String rootNameString = classConfigInfo.displayName.getString();
 		if(rootNameString == null) {
@@ -31,8 +32,9 @@ public class ConfigUtil {
 		}
 		return true;
 	}
+	
 	public static boolean updateClassConfigInfoByConfig(ClassConfigInfo classConfigInfo, Config config) {
-		String rootNameString = classConfigInfo.displayName.getString();
+		String rootNameString = classConfigInfo.description;
 		if(rootNameString == null) {
 			System.out.println("rootNameString: null!");
 			return false;
@@ -65,8 +67,6 @@ public class ConfigUtil {
 			}else {
 				System.out.println("enabled is null");
 			}
-//			config.set(rootNameString+"."+configItemName+"."+IMENAME, configItem.imeName);
-//			config.set(rootNameString+"."+configItemName+"."+ISENABLED, configItem.enabled);
 		}
 		return true;
 	}
@@ -79,8 +79,8 @@ public class ConfigUtil {
 		Map<String, Object> configMap = fileConfig.valueMap();
 		for(Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : classConfigInfoMap.entrySet()) {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
-			String classDisplayName = classConfigInfo.displayName.toString();
-			Config classConfig = (Config)configMap.get(classDisplayName);
+			String classDescription = classConfigInfo.description;
+			Config classConfig = (Config)configMap.get(classDescription);
 			if(classConfig == null) {
 				continue;
 			}

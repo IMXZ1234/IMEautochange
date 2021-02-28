@@ -26,9 +26,18 @@ import net.minecraft.util.text.ITextComponent;
  *
  */
 public class ClassConfigInfo {
+	/**
+	 * The class of the Screen this ClassConfigInfo represents.
+	 * If that Gui is IOverlayAdapter, this should be null.
+	 */
 	public Class<?> clazz;
+	/**
+	 * The adapter for the Overlay this ClassConfigInfo represents.
+	 * If that Gui is a Screen, this should be null.
+	 */
 	public IOverlayAdapter overlayAdapter;
 	public ITextComponent displayName;
+	public String description;
 	public boolean isOverlay;
 	public HashMap<String, ConfigItem> configItems;
 	
@@ -40,6 +49,7 @@ public class ClassConfigInfo {
 		this.clazz = classConfigInfo.clazz;
 		this.overlayAdapter = classConfigInfo.overlayAdapter;
 		this.displayName = classConfigInfo.displayName;
+		this.description = classConfigInfo.description;
 		this.isOverlay = classConfigInfo.isOverlay;
 		this.configItems = new HashMap<String, ConfigItem>();
 		for(Entry<String, ConfigItem> entry : classConfigInfo.configItems.entrySet()){
@@ -50,15 +60,15 @@ public class ClassConfigInfo {
 	/**
 	 * Note here configItems is only a reference of input HashMap.
 	 * @param clazz
-	 * @param imeName
-	 * @param displayName
-	 * @param isOverlay
+	 * @param classDisplayName
+	 * @param classDescription
 	 * @param configItems
 	 */
-	public ClassConfigInfo(Class<?> clazz, ITextComponent displayName, HashMap<String, ConfigItem> configItems){
+	public ClassConfigInfo(Class<?> clazz, String classDescription, ITextComponent classDisplayName, HashMap<String, ConfigItem> configItems){
 		this.clazz = clazz;
 		this.overlayAdapter = null;
-		this.displayName = displayName;
+		this.description = classDescription;
+		this.displayName = classDisplayName;
 		this.isOverlay = false;
 		this.configItems = configItems;
 	}
@@ -66,74 +76,84 @@ public class ClassConfigInfo {
 	/**
 	 * A constructor with configItems built from its elements.
 	 * @param clazz
-	 * @param imeName
-	 * @param displayName
-	 * @param isOverlay
-	 * @param description
-	 * @param value
+	 * @param classDisplayName
+	 * @param classDescription
+	 * @param itemDescription
+	 * @param itemDislayName
+	 * @param defaultEnabled
+	 * @param defaultIMEName
 	 */
-	public ClassConfigInfo(Class<?> clazz, ITextComponent displayName, String[] description, boolean[] defaultEnabled, String[] defaultIMEName){
+	public ClassConfigInfo(Class<?> clazz, String classDescription, ITextComponent classDisplayName, String[] itemDescription, ITextComponent[] itemDislayName, boolean[] defaultEnabled, String[] defaultIMEName){
 		System.out.println("Creating ClassConfigInfo");
 		this.clazz = clazz;
 		this.overlayAdapter = null;
-		this.displayName = displayName;
+		this.displayName = classDisplayName;
+		this.description = classDescription;
 		this.isOverlay = false;
 		this.configItems = new HashMap<String, ConfigItem>();
-		int itemNum = description.length;
+		int itemNum = itemDescription.length;
 		if(itemNum>defaultEnabled.length) {
 			itemNum = defaultEnabled.length;
 		}
 		if(itemNum>defaultIMEName.length) {
 			itemNum = defaultIMEName.length;
 		}
+		if(itemNum > itemDislayName.length) {
+			itemNum = itemDislayName.length;
+		}
 		for(int i =0;i<itemNum;i++) {
-			System.out.println("description"+description[i]);
-			this.configItems.put(description[i], new ConfigItem(defaultIMEName[i], defaultEnabled[i]));
+			System.out.println("itemDescription"+itemDescription[i]);
+			this.configItems.put(itemDescription[i], new ConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
 		}
 	}
 	
 	/**
 	 * Note here configItems is only a reference of input HashMap.
 	 * @param clazz
-	 * @param imeName
-	 * @param displayName
-	 * @param isOverlay
+	 * @param classDisplayName
+	 * @param classDescription
 	 * @param configItems
 	 */
-	public ClassConfigInfo(IOverlayAdapter overlayAdapter, ITextComponent displayName, HashMap<String, ConfigItem> configItems){
+	public ClassConfigInfo(IOverlayAdapter overlayAdapter, String classDescription, ITextComponent classDisplayName, HashMap<String, ConfigItem> configItems){
 		this.clazz = null;
 		this.overlayAdapter = overlayAdapter;
-		this.displayName = displayName;
+		this.displayName = classDisplayName;
+		this.description = classDescription;
 		this.isOverlay = false;
 		this.configItems = configItems;
 	}
 	
 	/**
 	 * A constructor with configItems built from its elements.
-	 * @param clazz
-	 * @param imeName
-	 * @param displayName
-	 * @param isOverlay
-	 * @param description
-	 * @param value
+	 * @param overlayAdapter
+	 * @param classDisplayName
+	 * @param classDescription
+	 * @param itemDescription
+	 * @param itemDislayName
+	 * @param defaultEnabled
+	 * @param defaultIMEName
 	 */
-	public ClassConfigInfo(IOverlayAdapter overlayAdapter, ITextComponent displayName, String[] description, boolean[] defaultEnabled, String[] defaultIMEName){
+	public ClassConfigInfo(IOverlayAdapter overlayAdapter, String classDescription, ITextComponent classDisplayName, String[] itemDescription, ITextComponent[] itemDislayName, boolean[] defaultEnabled, String[] defaultIMEName){
 		System.out.println("Creating ClassConfigInfo");
 		this.clazz = null;
 		this.overlayAdapter = overlayAdapter;
-		this.displayName = displayName;
+		this.displayName = classDisplayName;
+		this.description = classDescription;
 		this.isOverlay = true;
 		this.configItems = new HashMap<String, ConfigItem>();
-		int itemNum = description.length;
+		int itemNum = itemDescription.length;
 		if(itemNum>defaultEnabled.length) {
 			itemNum = defaultEnabled.length;
 		}
 		if(itemNum>defaultIMEName.length) {
 			itemNum = defaultIMEName.length;
 		}
+		if(itemNum > itemDislayName.length) {
+			itemNum = itemDislayName.length;
+		}
 		for(int i =0;i<itemNum;i++) {
-			System.out.println("description"+description[i]);
-			this.configItems.put(description[i], new ConfigItem(defaultIMEName[i], defaultEnabled[i]));
+			System.out.println("itemDescription"+itemDescription[i]);
+			this.configItems.put(itemDescription[i], new ConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
 		}
 	}
 	
@@ -141,28 +161,19 @@ public class ClassConfigInfo {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		if (isOverlay) {
-			builder.append(String.format("Overlay Class Info\nclass name:\t%s\nConfig Display Name:\t%s",
+			builder.append(String.format("Overlay Class Info\nclass name:\t%s\nConfig Description:\t%s",
 					overlayAdapter.getOverlayClass().getName(), 
-					displayName));
+					description));
 		} else {
-			builder.append(String.format("Screen Class Info\nclass name:\t%s\nConfig Display Name:\t%s", 
+			builder.append(String.format("Screen Class Info\nclass name:\t%s\nConfig Description:\t%s", 
 					clazz.getName(),
-					displayName));
+					description));
 		}
 		builder.append("\nConfig Items:");
 		int i = 0;
 		for (Entry<String, ConfigItem> entry : configItems.entrySet()) {
 			builder.append("\n(" + i + ") ");
-			builder.append(entry.getKey());
-			ConfigItem configItem = entry.getValue();
-			builder.append("\n\tDefault Config:");
-			builder.append(configItem.defaultIMEName);
-			builder.append("\t");
-			builder.append(configItem.defaultEnabled ? "Enabled" : "Disabled");
-			builder.append("\n\tCurrent Config:");
-			builder.append(configItem.imeName);
-			builder.append("\t");
-			builder.append(configItem.enabled ? "Enabled" : "Disabled");
+			builder.append(entry.getValue().toString());
 			i++;
 		}
 		return builder.toString();

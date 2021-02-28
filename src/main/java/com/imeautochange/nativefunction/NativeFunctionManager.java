@@ -137,6 +137,9 @@ public class NativeFunctionManager
 			LOGGER.error("Unsuspected error on reloading IME list.");
 			return false;
 		}
+		if (!nativeFunctionProvider.getIMEInfoList(imeInfoList)) {
+			LOGGER.error("Unsuspected error on getting IME list.");
+		}
 		return true;
 	}
 

@@ -77,7 +77,7 @@ public abstract class COMHelper {
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 //			System.out.println("offsetTable "+offsetTable);
-			System.out.println(method.getName());
+//			System.out.println(method.getName());
 //			System.out.println("lpVtbl "+lpVtbl);
 //			System.out.println("Native.POINTER_SIZE "+Native.POINTER_SIZE);
 			Object[] callArgs = new Object[args.length + 1];

@@ -127,34 +127,7 @@ public class ModFunctionManager {
 	
 	public static void updateHandlersListenerTable(HashMap<Class<?>, ClassConfigInfo> cachedChanges) {
 		for (Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : cachedChanges.entrySet()) {
-			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
-			System.out.println("updateHandlersListenerTable:\n"+classConfigInfo);
-			for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
-				ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(configItemsEntry.getKey());
-				if (handler != null) {
-					ConfigItem configItem = configItemsEntry.getValue();
-					if (handler instanceof ModClientEventsHandler) {
-						if (configItem.enabled) {
-							if (classConfigInfo.isOverlay)
-								((ModClientEventsHandler) handler).addOverlayListenerClass(classConfigInfo.overlayAdapter, configItem.imeName);
-							else
-								((ModClientEventsHandler) handler).addScreenListenerClass(classConfigInfo.clazz, configItem.imeName);
-						} else {
-							if (classConfigInfo.isOverlay)
-								((ModClientEventsHandler) handler).removeOverlayListenerClass(classConfigInfo.overlayAdapter);
-							else
-								((ModClientEventsHandler) handler).removeScreenListenerClass(classConfigInfo.clazz);
-						}
-					} else if(handler instanceof ModClientEventsHandlerSpecific){
-						if (configItem.enabled) {
-							handler.register();
-							((ModClientEventsHandlerSpecific)handler).setIMENameToSwitch(configItem.imeName);
-						} else {
-							handler.unregister();
-						}
-					}
-				}
-			}
+			updateHandlersListenerTable(classConfigInfoEntry.getValue());
 		}
 	}
 

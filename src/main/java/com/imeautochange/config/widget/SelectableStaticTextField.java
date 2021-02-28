@@ -35,10 +35,13 @@ public class SelectableStaticTextField extends TextFieldWidget {
 	public boolean canWrite() {
 		return false;
 	}
-
+	
 	@Override
-	public void onClick(double mouseX, double mouseY) {
-		this.onSelect.onSelected(this);
+	public boolean mouseClicked(double mouseX, double mouseY, int button) {
+		if(isMouseOver(mouseX, mouseY) && button == 0) {
+			this.onSelect.onSelected(this);
+		}
+		return super.mouseClicked(mouseX, mouseY, button);
 	}
 	
 	@OnlyIn(Dist.CLIENT)

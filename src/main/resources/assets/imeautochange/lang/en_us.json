@@ -12,5 +12,10 @@
 	"imeautochange.config.editsignscreen":"Edit Sign",
 	"imeautochange.config.anvilscreen":"Anvil",
 	"imeautochange.config.creativescreen":"Creative",
-	"imeautochange.config.jeiingredientlistoverlay":"JEI"
+	"imeautochange.config.jeiingredientlistoverlay":"JEI",
+	
+	"imeautochange.config.mouseinputaware":"Switching on Mouse Click",
+	"imeautochange.config.keyboardinputaware":"Switching on Key Pressed",
+	"imeautochange.config.guiopenaware":"Switching on GUI Open",
+	"imeautochange.config.jeiprefixinputaware":"Switching on JEI Search Field Prefix Input"
 }

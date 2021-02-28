@@ -8,11 +8,11 @@ import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.startup.IMESupport;
 
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
 
 public class BuiltInModSupport extends IMESupport{
-	public static final String DESCRIPTION_JEIPREFIXINPUTAWARE = "Enable Switching on JEI Search Field Prefix Input";
 	private ModList modList;
 	@Override
 	public void initMembers() {
@@ -24,8 +24,10 @@ public class BuiltInModSupport extends IMESupport{
 			_handlerDescriptions.add(DESCRIPTION_JEIPREFIXINPUTAWARE);
 			_handlers.add(new JEICompatPrefixKeyboardInputHandler());
 			ClassConfigInfo jeiIngredientListOverlay = new ClassConfigInfo(JEICompatIngredientListOverlayAdapter.INSTANCE,
-					new TranslationTextComponent("imeautochange.config.jeiingredientlistoverlay"),
-					new String[] { DESCRIPTION_MOUSEINPUTAWARE, DESCRIPTION_KEYBOARDINPUTINPUTAWARE, DESCRIPTION_JEIPREFIXINPUTAWARE },
+					DESCRIPTION_JEIINGREDIENTLISTOVERLAY,
+					DISPLAYNAME_JEIINGREDIENTLISTOVERLAY,
+					new String[] { DESCRIPTION_MOUSEINPUTAWARE, DESCRIPTION_KEYBOARDINPUTAWARE, DESCRIPTION_JEIPREFIXINPUTAWARE },
+					new ITextComponent[] { DISPLAYNAME_MOUSEINPUTAWARE, DISPLAYNAME_KEYBOARDINPUTAWARE, DISPLAYNAME_JEIPREFIXINPUTAWARE }, 
 					new boolean[] { true, true, true },
 					new String[] { defaultIMEName, englishIMEName, englishIMEName });
 			_classConfigInfos.add(jeiIngredientListOverlay);
