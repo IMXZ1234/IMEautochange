@@ -12,8 +12,8 @@ public class Win32Util {
 			if ((flagValues[i] & valueToCheck) != 0) {
 				if (!firstValue) {
 					builder.append(" | ");
-					firstValue = false;
 				}
+				firstValue = false;
 				builder.append(flagNames[i]);
 			}
 		}
@@ -27,8 +27,8 @@ public class Win32Util {
 			if ((bitFlags[i].flagValue & valueToCheck) != 0) {
 				if (!firstValue) {
 					builder.append(" | ");
-					firstValue = false;
 				}
+				firstValue = false;
 				builder.append(bitFlags[i].flagName);
 			}
 		}

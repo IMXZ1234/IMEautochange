@@ -14,7 +14,7 @@ public class ConfigUtil {
 	public static final String ISENABLED = "Enabled";
 	
 	public static boolean updateConfigByClassConfigInfo(ClassConfigInfo classConfigInfo, Config config) {
-		String rootNameString = classConfigInfo.displayName.getString();
+		String rootNameString = classConfigInfo.description;
 		if(rootNameString == null) {
 			System.out.println("rootNameString: null!");
 			return false;
@@ -27,6 +27,9 @@ public class ConfigUtil {
 				System.out.println("configItem || configItemName: null!");
 				continue;
 			}
+			System.out.println("setting changed, config root:");
+			System.out.println(rootNameString+"."+configItemName+"."+IMENAME  +":"+  configItem.imeName);
+			System.out.println(rootNameString+"."+configItemName+"."+ISENABLED +":"+ configItem.enabled);
 			config.set(rootNameString+"."+configItemName+"."+IMENAME, configItem.imeName);
 			config.set(rootNameString+"."+configItemName+"."+ISENABLED, configItem.enabled);
 		}
@@ -55,6 +58,9 @@ public class ConfigUtil {
 			}else {
 				System.out.println("configItem: "+configItem);
 			}
+			System.out.println("setting changed, config root:");
+			System.out.println(rootNameString+"."+configItemName+"."+IMENAME  +":"+  configItem.imeName);
+			System.out.println(rootNameString+"."+configItemName+"."+ISENABLED +":"+ configItem.enabled);
 			String imeName = config.get(rootNameString+"."+configItemName+"."+IMENAME);
 			Boolean enabled = config.get(rootNameString+"."+configItemName+"."+ISENABLED);
 			if(imeName != null){
@@ -81,10 +87,9 @@ public class ConfigUtil {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
 			String classDescription = classConfigInfo.description;
 			Config classConfig = (Config)configMap.get(classDescription);
-			if(classConfig == null) {
-				continue;
+			if(classConfig != null) {
+				updateClassConfigInfoByConfig(classConfigInfo, classConfig);
 			}
-			updateClassConfigInfoByConfig(classConfigInfo, classConfig);
 		}
 	}
 }

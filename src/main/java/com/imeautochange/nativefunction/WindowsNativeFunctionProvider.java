@@ -10,9 +10,11 @@ import java.util.Map.Entry;
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.nativefunction.windows.COMHelper;
 import com.imeautochange.nativefunction.windows.COMInterface;
+import com.imeautochange.nativefunction.windows.COMInterfaceITfInputProcessorProfileMgr;
 import com.imeautochange.nativefunction.windows.COMInterfaceITfInputProcessorProfiles;
 import com.imeautochange.nativefunction.windows.Input;
 import com.imeautochange.nativefunction.windows.LAYOUTORTIPPROFILE;
+import com.imeautochange.nativefunction.windows.TF_INPUTPROCESSORPROFILE;
 import com.imeautochange.nativefunction.windows.Win32Util;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.ShortByReference;
@@ -117,24 +119,31 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
     		}
         }
         if (bEnable.getValue() != 0) {
-        	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ActivateLanguageProfile(profile.clsid, profile.langid, profile.guidProfile);
-        	if(hResult!=COMInterface.S_OK) {
-    			System.out.println("ActivateLanguageProfile error");
-    			return RESULT_ERROR;
-    		}
-        }
-        else {
         	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.EnableLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, true);
         	if(hResult!=COMInterface.S_OK) {
     			System.out.println("EnableLanguageProfile error");
     			return RESULT_ERROR;
     		}
-        	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ActivateLanguageProfile(profile.clsid, profile.langid, profile.guidProfile);
-        	if(hResult!=COMInterface.S_OK) {
-    			System.out.println("ActivateLanguageProfile error");
-    			return RESULT_ERROR;
-    		}
         }
+        System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
+ 		if(profile.dwProfileType == LAYOUTORTIPPROFILE.LOTP_KEYBOARDLAYOUT) {
+ 			long hkl = Long.parseUnsignedLong((String.valueOf(profile.szId).trim().split(":")[1]),16);
+ 			System.out.println(String.format("hkl %016X", hkl));
+ 			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_KEYBOARDLAYOUT, profile.langid, 
+ 					profile.clsid, profile.guidProfile, hkl, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
+ 			System.out.println("hResult = "+hResult);
+ 		}else {
+ 			System.out.println("input processor ");
+ 			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_INPUTPROCESSOR, profile.langid, 
+ 					profile.clsid, profile.guidProfile, 0, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
+ 			System.out.println("hResult = "+hResult);
+ 		}
+ 		System.out.println("\n\n");
+//    	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ActivateLanguageProfile(profile.clsid, profile.langid, profile.guidProfile);
+//    	if(hResult!=COMInterface.S_OK) {
+//			System.out.println("ActivateLanguageProfile error");
+//			return RESULT_ERROR;
+//		}
 		return RESULT_OK;
 	}
 
