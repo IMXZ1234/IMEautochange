@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import com.imeautochange.IMEautochange;
 import com.imeautochange.util.ReflectionUtil;
 
-import mezz.jei.Internal;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -15,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 
 @JeiPlugin
 public class JEICompatIngredientListOverlayAdapter implements IOverlayAdapter, IModPlugin {
-//	private JEICompatIngredientListOverlayAdapter() {}
 	public static JEICompatIngredientListOverlayAdapter INSTANCE = new JEICompatIngredientListOverlayAdapter();
 	
 	private static IngredientListOverlay ingredientListOverlay;

@@ -30,10 +30,7 @@ public abstract class COMHelper {
 	public static COMInterface loadInterface(Class<? extends COMInterface> comClazz, COMInfo comInfo) {
 		if(!isCOMInitialized) {
 			throw new IllegalStateException("COM not initialized");
-		}
-		System.out.println("clsidTfInputprocessorprofiles "+comInfo.rclsid);
-		System.out.println("iidItfinputprocessorprofiles "+comInfo.riid);
-		
+		}		
 		Pointer pv =new Pointer(0);
 		PointerByReference ppv = new PointerByReference(pv);
 		Ole32.INSTANCE.CoCreateInstance(comInfo.rclsid, null, comInfo.dwClsContext, comInfo.riid, ppv);
@@ -52,7 +49,6 @@ public abstract class COMHelper {
 		if(qHandler == null) {
 			throw new IllegalArgumentException("The COM Interface sending the request is not created.");
 		}
-		System.out.println("requester lpVtbl "+Pointer.nativeValue(qHandler.getCOMlpVtbl()));
 		Pointer qlpVtbl = qHandler.getCOMlpVtbl();
 		Pointer qpv = qHandler.getCOMpv();
 		Pointer pv =new Pointer(0);
@@ -65,7 +61,6 @@ public abstract class COMHelper {
 		QueryInterfaceInArgList[1] = comInfo.riid;
 		QueryInterfaceInArgList[2] = ppv;
 		QueryInterface.invoke(int.class, QueryInterfaceInArgList);
-		System.out.println("ppv"+ppv.getValue());
 		pv = new Pointer(Pointer.nativeValue(ppv.getValue()));
 		Handler handler = new Handler(pv, comInfo.offsetTable);
 		Object proxy = Proxy.newProxyInstance(comClazz.getClassLoader(), new Class[] {comClazz}, handler);
@@ -90,9 +85,6 @@ public abstract class COMHelper {
 		}
 		@Override
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//			System.out.println("offsetTable "+offsetTable);
-//			System.out.println(method.getName());
-//			System.out.println("lpVtbl "+lpVtbl);
 			Object[] callArgs = new Object[args.length + 1];
 			for (int i = 0; i < args.length; i++) {
 				callArgs[i + 1] = args[i];

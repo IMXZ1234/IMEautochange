@@ -4,32 +4,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.config.ConfigItem;
 
 public class ConfigUtil {
+	private static final Logger LOGGER = LogManager.getLogger();
+	
 	public static final String IMENAME = "IME";
 	public static final String ISENABLED = "Enabled";
 	
 	public static boolean updateConfigByClassConfigInfo(ClassConfigInfo classConfigInfo, Config config) {
 		String rootNameString = classConfigInfo.description;
 		if(rootNameString == null) {
-			System.out.println("rootNameString: null!");
+			LOGGER.error("ClassConfigInfo.description: null!");
 			return false;
 		}
-		System.out.println("rootNameString: "+rootNameString);
 		for(Entry<String, ConfigItem> entry:classConfigInfo.configItems.entrySet()) {
 			String configItemName = entry.getKey();
 			ConfigItem configItem = entry.getValue();
 			if(configItem == null || configItemName == null) {
-				System.out.println("configItem || configItemName: null!");
+				LOGGER.error("configItem || configItemName: null!");
 				continue;
 			}
-			System.out.println("setting changed, config root:");
-			System.out.println(rootNameString+"."+configItemName+"."+IMENAME  +":"+  configItem.imeName);
-			System.out.println(rootNameString+"."+configItemName+"."+ISENABLED +":"+ configItem.enabled);
 			config.set(rootNameString+"."+configItemName+"."+IMENAME, configItem.imeName);
 			config.set(rootNameString+"."+configItemName+"."+ISENABLED, configItem.enabled);
 		}
@@ -39,39 +40,31 @@ public class ConfigUtil {
 	public static boolean updateClassConfigInfoByConfig(ClassConfigInfo classConfigInfo, Config config) {
 		String rootNameString = classConfigInfo.description;
 		if(rootNameString == null) {
-			System.out.println("rootNameString: null!");
+			LOGGER.error("ClassConfigInfo.description: null!");
 			return false;
 		}
-		System.out.println("rootNameString: "+rootNameString);
 		for(Entry<String, ConfigItem> entry:classConfigInfo.configItems.entrySet()) {
 			String configItemName = entry.getKey();
 			ConfigItem configItem = entry.getValue();
 			if(configItem == null) {
-				System.out.println("configItemName: null!");
+				LOGGER.error("configItemName: null!");
 				continue;
-			}else {
-				System.out.println("configItemName: "+configItemName);
 			}
 			if(configItemName == null) {
-				System.out.println("configItem: null!");
+				LOGGER.error("configItem: null!");
 				continue;
-			}else {
-				System.out.println("configItem: "+configItem);
 			}
-			System.out.println("setting changed, config root:");
-			System.out.println(rootNameString+"."+configItemName+"."+IMENAME  +":"+  configItem.imeName);
-			System.out.println(rootNameString+"."+configItemName+"."+ISENABLED +":"+ configItem.enabled);
 			String imeName = config.get(rootNameString+"."+configItemName+"."+IMENAME);
 			Boolean enabled = config.get(rootNameString+"."+configItemName+"."+ISENABLED);
 			if(imeName != null){
 				configItem.imeName = imeName;
 			}else {
-				System.out.println("imeName is null");
+				LOGGER.error("configItem.imeName: null!");
 			}
 			if(enabled != null) {
 				configItem.enabled = enabled;
 			}else {
-				System.out.println("enabled is null");
+				LOGGER.error("configItem.enabled: null!");
 			}
 		}
 		return true;
@@ -88,6 +81,7 @@ public class ConfigUtil {
 			String classDescription = classConfigInfo.description;
 			Config classConfig = (Config)configMap.get(classDescription);
 			if(classConfig != null) {
+				LOGGER.error("Found ClassConfigInfo in classConfigInfoMap, but not in Config!");
 				updateClassConfigInfoByConfig(classConfigInfo, classConfig);
 			}
 		}

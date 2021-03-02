@@ -1,6 +1,5 @@
 package com.imeautochange.config.widget;
 
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.imeautochange.config.ClassConfigInfo;
@@ -19,10 +18,6 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
 	public ListenerClassEntryListWidget(ConfigScreen parent, int listWidth, int top, int bottom)
     {
         super(parent.getMinecraft(), listWidth, parent.height, top, bottom, parent.getFontRenderer().FONT_HEIGHT * 2 + 8);
-        
-        System.out.print("ListenerClassEntryListWidget init");
-//        this.x1 = parent.width;
-//        this.x0 = x1 - listWidth;
         this.parent = parent;
         this.listWidth = listWidth;
         this.refreshList();
@@ -35,9 +30,7 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-    	System.out.println("ListenerClassEntryListWidget mouse clicked");
     	boolean result = super.mouseClicked(mouseX, mouseY, button);
-    	System.out.println("result: "+result);
     	return result;
     }
 
@@ -50,7 +43,6 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
     public void refreshList() {
         this.clearEntries();
         for(Entry<Class<?>, ClassConfigInfo> entry : parent.getListenerClassInfo().entrySet()) {
-        	System.out.println("ListenerClassEntry added"+entry.getKey().getName());
         	addEntry(new ListenerClassEntry(entry.getKey(), entry.getValue()));
         }
     }
@@ -88,7 +80,6 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
     	@Override
         public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_)
         {
-    		System.out.println("ListenerClassEntry clicked");
     		ListenerClassEntryListWidget.this.setSelected(this);
             parent.setSelectedListenerClassEntry(this);
             return false;

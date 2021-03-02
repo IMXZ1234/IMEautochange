@@ -13,7 +13,7 @@ public class IMESupportManager {
 	}
 	public static void initAllIMESupports() {
 		for(IMESupport support : supportList) {
-			LOGGER.info("Initializing "+support.getClass().getName());
+			LOGGER.info("Initializing Support: "+support.getClass().getName());
 			support.initIMESupport();
 		}
 	}

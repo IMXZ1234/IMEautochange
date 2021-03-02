@@ -1,5 +1,4 @@
 {
-	"imeautochange.gui.configscreen.textfield.selectedimename":"Selected IME",
 	"imeautochange.gui.configscreen.button.confirm":"Done",
 	"imeautochange.gui.configscreen.button.default":"Defualt",
 	"imeautochange.gui.configscreen.button.cancel":"Cancel",
@@ -13,9 +12,11 @@
 	"imeautochange.config.anvilscreen":"Anvil",
 	"imeautochange.config.creativescreen":"Creative",
 	"imeautochange.config.jeiingredientlistoverlay":"JEI",
+	"imeautochange.config.chatscreen":"Chat Screen",
 	
 	"imeautochange.config.mouseinputaware":"Switching on Mouse Click",
 	"imeautochange.config.keyboardinputaware":"Switching on Key Pressed",
 	"imeautochange.config.guiopenaware":"Switching on GUI Open",
-	"imeautochange.config.jeiprefixinputaware":"Switching on JEI Search Field Prefix Input"
+	"imeautochange.config.jeiprefixinputaware":"Switching on JEI Search Field Prefix Input",
+	"imeautochange.config.openchatkeybindinginputaware":"Switching on Open Chat"
 }

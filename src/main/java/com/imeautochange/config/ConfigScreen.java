@@ -2,17 +2,12 @@ package com.imeautochange.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import com.google.common.collect.Lists;
 import com.imeautochange.ModFunctionManager;
-import com.imeautochange.config.widget.ConfigItemPanel;
 import com.imeautochange.config.widget.IMEInfoEntryListWidget;
 import com.imeautochange.config.widget.IMEInfoEntryListWidget.IMEInfoEntry;
 import com.imeautochange.config.widget.IdentifiableButton;
@@ -25,13 +20,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.OptionSlider;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.settings.SliderPercentageOption;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -91,22 +82,21 @@ public class ConfigScreen extends Screen {
     
     public void setSelectedIMEInfoEntry(IMEInfoEntry entry)
     {
-    	System.out.println("IMEInfoEntry selected");
+//    	System.out.println("IMEInfoEntry selected");
         this.selectedIMEInfoEntry = entry;
         String imeName = entry.getIMEInfo().name;
-        System.out.println("imeName "+imeName);
 		if (selectedStatic != null) {
 			this.selectedStatic.setText(imeName);
 			addConfigChangeToCache(selectedListenerClassEntry.getClazz(), selectedStatic.getId(), imeName);
-			System.out.println("addConfigChangeToCache imeName");
-			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(selectedStatic.getId()).imeName);
-			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), selectedStatic.getId(), imeName));
+//			System.out.println("addConfigChangeToCache imeName");
+//			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(selectedStatic.getId()).imeName);
+//			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), selectedStatic.getId(), imeName));
 		}
     }
     
     public void setSelectedListenerClassEntry(ListenerClassEntry entry)
     {
-    	System.out.println("ListenerClassEntry selected");
+//    	System.out.println("ListenerClassEntry selected");
     	this.selectedListenerClassEntry = entry;
     	classConfigInfoPanel.refreshDisplayedClassConfigInfo(selectedListenerClassEntry.getClazz(), getClassConfigInfoForDisplay());
     }
@@ -135,11 +125,9 @@ public class ConfigScreen extends Screen {
 		// Check if displayed ClassConfigInfo is changed already and saved in cachedChanges.
     	ClassConfigInfo selectedClassConfigInfo = cachedChanges.get(selectedListenerClassEntry.getClazz());
     	if(selectedClassConfigInfo == null) {
-        	System.out.println("not in cache");
     		selectedClassConfigInfo = listenerClassInfo.get(selectedListenerClassEntry.getClazz());
     	}
     	else{
-    		System.out.println("already in cache");
     	}
     	return selectedClassConfigInfo;
 	}
@@ -162,7 +150,6 @@ public class ConfigScreen extends Screen {
 		for (IMEInfo imeInfo:imeList)
         {
             imeInfoEntryListWidth = Math.max(imeInfoEntryListWidth,getFontRenderer().getStringWidth(imeInfo.name) + 10);
-//            imeInfoEntryListWidth = Math.max(imeInfoEntryListWidth,getFontRenderer().getStringWidth(imeInfo.id) + 5);
         }
 		for (Entry<Class<?>, ClassConfigInfo> entry:listenerClassInfo.entrySet())
 		{
@@ -215,6 +202,15 @@ public class ConfigScreen extends Screen {
 
 	private void resetToDefault() {
 		cachedChanges.clear();
+		for(Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : listenerClassInfo.entrySet()) {
+			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
+			cachedChanges.put(classConfigInfoEntry.getKey(), new ClassConfigInfo(classConfigInfo));
+			for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
+				ConfigItem configItem = configItemsEntry.getValue();
+				configItem.enabled = configItem.defaultEnabled;
+				configItem.imeName = configItem.defaultIMEName;
+			}
+		}
 		if(selectedListenerClassEntry != null) {
 			classConfigInfoPanel.refreshDisplayedClassConfigInfo(selectedListenerClassEntry.getClazz(), getClassConfigInfoForDisplay());
 		}
@@ -253,23 +249,23 @@ public class ConfigScreen extends Screen {
 	    		entry.getValue().enabled ? new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementenabled")
 	    								 : new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementdisabled"), 
 	    		(button)->{
-	            	System.out.println("button pressed "+((IdentifiableButton)button).getId());
+//	            	System.out.println("button pressed "+((IdentifiableButton)button).getId());
 	            	ConfigItem oldConfigItem = getClassConfigInfoForDisplay().configItems.get(((IdentifiableButton)button).getId());
-	            	System.out.println("old config: "+oldConfigItem.enabled);
+//	            	System.out.println("old config: "+oldConfigItem.enabled);
 	            	boolean newEnabledState = !oldConfigItem.enabled;
 	            	button.setMessage(newEnabledState ? new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementenabled")
 	    								 : new TranslationTextComponent("imeautochange.gui.configscreen.button.configelementdisabled"));
 	            	addConfigChangeToCache(selectedListenerClassEntry.getClazz(), ((IdentifiableButton)button).getId(), newEnabledState);
-	            	System.out.println("addConfigChangeToCache enabled");
-	    			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(((IdentifiableButton)button).getId()).enabled);
-	    			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), ((IdentifiableButton)button).getId(), newEnabledState));
+//	            	System.out.println("addConfigChangeToCache enabled");
+//	    			System.out.println("new config: "+getClassConfigInfoForDisplay().configItems.get(((IdentifiableButton)button).getId()).enabled);
+//	    			System.out.println("is restored?: "+isConfigChangeRestored(selectedListenerClassEntry.getClazz(), ((IdentifiableButton)button).getId(), newEnabledState));
 	            }, entry.getKey()));
 	    		SelectableStaticTextField selectableTextField = 
 	    			new SelectableStaticTextField(font, classDisplayNameCenterxPos - 20 + PADDING, y, 100, 20, new StringTextComponent(entry.getValue().imeName), 
 								(staticTextField) -> {
-									System.out.println("static pressed " + staticTextField.getText());
+//									System.out.println("static pressed " + staticTextField.getText());
 									selectedStatic = staticTextField;
-									System.out.println("set selectedStatic:"+ selectedStatic.getId());
+//									System.out.println("set selectedStatic:"+ selectedStatic.getId());
 								}, 
 	    					entry.getKey());
 	    		selectableTextField.setText(entry.getValue().imeName);
@@ -313,27 +309,19 @@ public class ConfigScreen extends Screen {
 		}
 		@Override
 	    protected boolean clickPanel(double mouseX, double mouseY, int button) { 
-			System.out.println("mouseX "+mouseX);
-	        System.out.println("mouseY "+mouseY);
 			double screenMouseX = mouseX + left;
 			double screenMouseY = mouseY + this.top - (int)this.scrollDistance + border;
-			System.out.println("screenMouseX "+screenMouseX);
-	        System.out.println("screenMouseY "+screenMouseY);
 			for(Widget child:children) {
-				System.out.println("checking "+child.getMessage());
+//				System.out.println("checking "+child.getMessage());
 				if(child.mouseClicked(screenMouseX, screenMouseY, button)) {
-					System.out.println("handled");
 					return true;
 				}
 			}
-			System.out.println("not handled");
 			return false;
 		}
 		
 		 @Override
 		    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		        System.out.println("mouseX "+mouseX);
-		        System.out.println("mouseY "+mouseY);
 		        return super.mouseClicked(mouseX, mouseY, button);
 		    }
 

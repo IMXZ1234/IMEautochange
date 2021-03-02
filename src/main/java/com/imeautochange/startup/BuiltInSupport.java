@@ -1,23 +1,19 @@
 package com.imeautochange.startup;
 
-import java.util.List;
-
 import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.event.GuiOpenEventsHandler;
 import com.imeautochange.event.KeyboardEventsHandler;
-import com.imeautochange.event.ModClientEventsHandler;
+import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.event.MouseEventsHandler;
+import com.imeautochange.event.OpenChatKeyBindingInputEventsHandler;
 
 import net.minecraft.client.gui.IngameGui;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.EditBookScreen;
 import net.minecraft.client.gui.screen.EditSignScreen;
 import net.minecraft.client.gui.screen.inventory.AnvilScreen;
 import net.minecraft.client.gui.screen.inventory.CreativeScreen;
-import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
 
 public class BuiltInSupport extends IMESupport{
 	
@@ -26,12 +22,14 @@ public class BuiltInSupport extends IMESupport{
 		handlerDescriptions = new String[] {
 				DESCRIPTION_MOUSEINPUTAWARE, 
 				DESCRIPTION_KEYBOARDINPUTAWARE, 
-				DESCRIPTION_GUIOPENAWARE
+				DESCRIPTION_GUIOPENAWARE,
+				DESCRIPTION_OPENCHATKEYBINGINGINPUTAWARE
 		};
-		handlers = new ModClientEventsHandler[] {
+		handlers = new ModClientEventsHandlerBase[] {
 				new MouseEventsHandler(),
 				new KeyboardEventsHandler(),
-				new GuiOpenEventsHandler()
+				new GuiOpenEventsHandler(),
+				new OpenChatKeyBindingInputEventsHandler()
 		};
 		ClassConfigInfo ingameGui = new ClassConfigInfo(IngameGui.class, 
 				DESCRIPTION_INGAMEGUI,
@@ -68,8 +66,15 @@ public class BuiltInSupport extends IMESupport{
 				new ITextComponent[] { DISPLAYNAME_MOUSEINPUTAWARE, DISPLAYNAME_KEYBOARDINPUTAWARE }, 
 				new boolean[] { true, true }, 
 				new String[] { defaultIMEName, englishIMEName });
+		ClassConfigInfo chatScreen = new ClassConfigInfo(ChatScreen.class, 
+				DESCRIPTION_CHATSCREEN,
+				DISPLAYNAME_CHATSCREEN,
+				new String[] { DESCRIPTION_OPENCHATKEYBINGINGINPUTAWARE }, 
+				new ITextComponent[] { DISPLAYNAME_OPENCHATKEYBINGINGINPUTAWARE }, 
+				new boolean[] { true }, 
+				new String[] { defaultIMEName });
 		classConfigInfos = new ClassConfigInfo[] {
-				ingameGui, editBookScreen, editSignScreen, anvilScreen, creativeScreen
+				ingameGui, editBookScreen, editSignScreen, anvilScreen, creativeScreen, chatScreen
 		};
 	}
 

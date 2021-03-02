@@ -27,9 +27,7 @@ public class GuiOpenEventsHandler extends ModClientEventsHandler {
 	
 	@Override
 	public int addScreenListenerClass(Class<?> clazz, String imeName) {
-		System.out.println("addScreenListenerClass"+imeName+clazz.getName());
 		if(clazz.isAssignableFrom(IngameGui.class)){
-			System.out.println("IngameGui");
 			IngameGuiIMEName = imeName;
 		}
 		return super.addScreenListenerClass(clazz, imeName);
@@ -38,7 +36,6 @@ public class GuiOpenEventsHandler extends ModClientEventsHandler {
 	@Override
 	public int removeScreenListenerClass(Class<?> clazz) {
 		if(clazz.isAssignableFrom(IngameGui.class)){
-			System.out.println("IngameGui");
 			IngameGuiIMEName = null;
 		}
 		return super.removeScreenListenerClass(clazz);

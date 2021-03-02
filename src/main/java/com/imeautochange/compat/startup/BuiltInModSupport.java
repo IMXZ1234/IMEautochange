@@ -9,7 +9,6 @@ import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.startup.IMESupport;
 
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
 
 public class BuiltInModSupport extends IMESupport{

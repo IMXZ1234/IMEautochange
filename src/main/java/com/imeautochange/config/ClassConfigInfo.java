@@ -1,7 +1,6 @@
 package com.imeautochange.config;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.imeautochange.compat.IOverlayAdapter;

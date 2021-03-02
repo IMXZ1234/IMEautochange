@@ -3,7 +3,6 @@ package com.imeautochange.event;
 import net.minecraftforge.common.MinecraftForge;
 
 public abstract class ModClientEventsHandlerBase {
-//	public int HANDLER_ID = -1;
 	public static final int RESULT_SUCCESS = 0x00000000;
 	public static final int RESULT_FAIL = 0x10000000;
 	

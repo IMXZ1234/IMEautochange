@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.nativefunction.windows.COMHelper;
 import com.imeautochange.nativefunction.windows.COMInterface;
@@ -69,6 +72,8 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	private static LAYOUTORTIPPROFILE englishProfile;
 	private static String englishProfileName;
 	
+	private static final Logger LOGGER = LogManager.getLogger();
+	
 	public static WindowsNativeFunctionProvider INSTANCE = new WindowsNativeFunctionProvider();
 	
 	private WindowsNativeFunctionProvider() {
@@ -98,52 +103,43 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 		IntByReference bEnable = new IntByReference();
 		
 		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.IsEnabledLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, bEnable);
-//		if(hResult!=COMInterface.S_OK) {
-//			return RESULT_ERROR;
-//		}else {
-//			System.out.println("IsEnabledLanguageProfile "+bEnable.getValue());
-//		}
+		if(hResult!=COMInterface.S_OK) {
+			LOGGER.error("IsEnabledLanguageProfile Error!");
+		}
 		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.GetCurrentLanguage(langid);
-//		System.out.println("IsEnabledLanguageProfile hResult "+hResult);
-//		if(hResult!=COMInterface.S_OK) {
-//			System.out.println("GetCurrentLanguage error");
-//			return RESULT_ERROR;
-//		}else {
-//			System.out.println("GetCurrentLanguage " + langid.getValue());
-//		}
+		if(hResult!=COMInterface.S_OK) {
+			LOGGER.error("GetCurrentLanguage Error!");
+		}
         if (profile.langid != langid.getValue()) {
         	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ChangeCurrentLanguage(profile.langid);
         	if(hResult!=COMInterface.S_OK) {
-    			System.out.println("ChangeCurrentLanguage error");
+        		LOGGER.error("ChangeCurrentLanguage Error!");
     			return RESULT_ERROR;
     		}
         }
         if (bEnable.getValue() != 0) {
         	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.EnableLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, true);
         	if(hResult!=COMInterface.S_OK) {
-    			System.out.println("EnableLanguageProfile error");
+        		LOGGER.error("EnableLanguageProfile Error!");
     			return RESULT_ERROR;
     		}
         }
-        System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
  		if(profile.dwProfileType == LAYOUTORTIPPROFILE.LOTP_KEYBOARDLAYOUT) {
  			long hkl = Long.parseUnsignedLong((String.valueOf(profile.szId).trim().split(":")[1]),16);
- 			System.out.println(String.format("hkl %016X", hkl));
  			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_KEYBOARDLAYOUT, profile.langid, 
  					profile.clsid, profile.guidProfile, hkl, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
- 			System.out.println("hResult = "+hResult);
+// 			if(hResult!=COMInterface.S_OK) {
+//        		LOGGER.error("ActivateProfile Error!");
+//    			return RESULT_ERROR;
+//    		}
  		}else {
- 			System.out.println("input processor ");
  			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_INPUTPROCESSOR, profile.langid, 
  					profile.clsid, profile.guidProfile, 0, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
- 			System.out.println("hResult = "+hResult);
+// 			if(hResult!=COMInterface.S_OK) {
+//        		LOGGER.error("ActivateProfile Error!");
+//    			return RESULT_ERROR;
+//    		}
  		}
- 		System.out.println("\n\n");
-//    	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ActivateLanguageProfile(profile.clsid, profile.langid, profile.guidProfile);
-//    	if(hResult!=COMInterface.S_OK) {
-//			System.out.println("ActivateLanguageProfile error");
-//			return RESULT_ERROR;
-//		}
 		return RESULT_OK;
 	}
 
@@ -201,13 +197,6 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 			if(!ipLangIdSet.contains(profile.langid)) {
 				profileTable.put(entry.getKey(), profile);
 			}
-		}
-		Iterator<Entry<String, LAYOUTORTIPPROFILE>> iter2 = profileTable.entrySet().iterator();
-		Map.Entry<String, LAYOUTORTIPPROFILE> entry2;
-		while (iter2.hasNext()) {
-			entry2 = (Entry<String, LAYOUTORTIPPROFILE>) iter2.next();
-			LAYOUTORTIPPROFILE profile = entry2.getValue();
-			System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
 		}
 		return true;
 	}
@@ -275,11 +264,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 				name = entry.getKey();
 				profile = entry.getValue();
 				szId = String.valueOf(profile.szId);
-				System.out.println("szId: "+szId);
-				System.out.println("szId.length"+szId.length());
 				szId = szId.trim();
-				System.out.println("szId: "+szId);
-				System.out.println("szId.length"+szId.length());
 				if(szId.matches("0804:\\{"+GUID_REGEX+"\\}\\{"+GUID_REGEX+"\\}")) {
 					defaultProfile = profile;
 					defaultProfileName = name;
@@ -304,7 +289,6 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 		imeInfo.id = String.valueOf(defaultProfile.szId).trim();
 		imeInfo.data = new String[] { String.format("%04X", defaultProfile.langid),
 				Win32Util.flagsToString(defaultProfile.dwProfileType, LAYOUTORTIPPROFILE.dwProfileTypeBitFlags) };
-		System.out.println("getDefaultIME \n"+imeInfo);
 		return true;
 	}
 	
@@ -336,11 +320,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 				name = entry.getKey();
 				profile = entry.getValue();
 				szId = String.valueOf(profile.szId);
-				System.out.println("szId: "+szId);
-				System.out.println("szId.length"+szId.length());
 				szId = szId.trim();
-				System.out.println("szId: "+szId);
-				System.out.println("szId.length"+szId.length());
 				if(szId.equals("0409:00000409")) {
 					englishProfile = profile;
 					englishProfileName = name;
@@ -377,7 +357,6 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 		imeInfo.id = String.valueOf(englishProfile.szId).trim();
 		imeInfo.data = new String[] { String.format("%04X", englishProfile.langid),
 				Win32Util.flagsToString(englishProfile.dwProfileType, LAYOUTORTIPPROFILE.dwProfileTypeBitFlags) };
-		System.out.println("getEnglishIME \n"+imeInfo);
 		return RESULT_OK;
 		
 	}

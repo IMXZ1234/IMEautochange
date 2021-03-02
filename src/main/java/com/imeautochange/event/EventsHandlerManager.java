@@ -7,13 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 public class EventsHandlerManager {
 	public static final HashMap<String, ModClientEventsHandlerBase> handlerMap = new HashMap<String, ModClientEventsHandlerBase>();
-//	private static ArrayList<ModClientEventsHandlerBase> eventsHandlers = new ArrayList<ModClientEventsHandlerBase>();
 	
 	private static final Logger LOGGER = LogManager.getLogger();
-	
-//	public static ArrayList<ModClientEventsHandlerBase> getEventsHandlerList() {
-//		return eventsHandlers;
-//	}
 	
 	public static HashMap<String, ModClientEventsHandlerBase> getEventsHandlers(){
 		return handlerMap;
@@ -31,8 +26,7 @@ public class EventsHandlerManager {
 	}
 
 	public static void registerHandler(String description, ModClientEventsHandlerBase handler) {
-//		handler.HANDLER_ID = eventsHandlers.size();
-//		eventsHandlers.add(handler.HANDLER_ID, handler);
+		LOGGER.info("Registering Handler: "+description);
 		handlerMap.put(description, handler);
 	}
 

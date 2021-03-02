@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.imeautochange.compat.startup.BuiltInModSupport;
 import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.config.ConfigItem;
@@ -17,6 +20,7 @@ import com.imeautochange.event.KeyBindingInputEventsHandler;
 import com.imeautochange.event.ModClientEventsHandler;
 import com.imeautochange.event.ModClientEventsHandlerBase;
 import com.imeautochange.event.ModClientEventsHandlerSpecific;
+import com.imeautochange.event.OpenChatKeyBindingInputEventsHandler;
 import com.imeautochange.nativefunction.NativeFunctionManager;
 import com.imeautochange.startup.BuiltInSupport;
 import com.imeautochange.startup.IMESupportManager;
@@ -33,24 +37,21 @@ public class ModFunctionManager {
 	private static ArrayList<IMEInfo> imeInfoList;
 	private static String defaultIMEName;
 	private static String englishIMEName;
+	
+	private static Logger LOGGER = LogManager.getLogger();
+
 	public static boolean isFunctionEnabled() {
 		return modFunctionEnabled;
 	}
 	public static void init(final FMLClientSetupEvent event) {
 		// Initialize NativeFunctionManager
-		System.out.println("init NativeFunctionManager");
+		LOGGER.info("Initializing Mod Functions...");
 		NativeFunctionManager.init();
 		if(!NativeFunctionManager.doesFunctionProviderExist()) {
 			return;
 		}
 		defaultIMEName = NativeFunctionManager.getDefaultIME().name;
-//		if(!NativeFunctionManager.isIMEInstalled(defaultIMEName)) {
-//			defaultIMEName = NativeFunctionManager.getIMEInfoList().get(0).name;
-//		}
 		englishIMEName = NativeFunctionManager.getEnglishIME().name;
-//		if(!NativeFunctionManager.isIMEInstalled(englishIMEName)) {
-//			defaultIMEName = NativeFunctionManager.getIMEInfoList().get(0).name;
-//		}
 		// Already reloaded during initialization of NativeFunctionManager.
 		imeInfoList = NativeFunctionManager.getIMEInfoList(false);
 		modFunctionEnabled = true;
@@ -72,7 +73,6 @@ public class ModFunctionManager {
 	    }
 	    
 		// Key binding
-		System.out.println("bingding keys");
 		event.enqueueWork(() -> ModKeyBinding.registerKeyBinding());
 		keyBindingInputEventsHandler = new KeyBindingInputEventsHandler();
 		keyBindingInputEventsHandler.register();
@@ -96,6 +96,7 @@ public class ModFunctionManager {
 	}
 	
 	public static void updateHandlersCachedFieldList() {
+		LOGGER.info("Caching Reflection Fields...");
 		for(Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : listenerClassConfigInfo.entrySet()) {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
 				ArrayList<Field> classFields = new ArrayList<Field>();
@@ -126,13 +127,13 @@ public class ModFunctionManager {
 //	}
 	
 	public static void updateHandlersListenerTable(HashMap<Class<?>, ClassConfigInfo> cachedChanges) {
+		LOGGER.info("Updating Handlers Internal table...");
 		for (Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : cachedChanges.entrySet()) {
 			updateHandlersListenerTable(classConfigInfoEntry.getValue());
 		}
 	}
 
 	public static void updateHandlersListenerTable(ClassConfigInfo classConfigInfo) {
-		System.out.println("updateHandlersListenerTable:\n"+classConfigInfo);
 		for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
 			ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(configItemsEntry.getKey());
 			if (handler != null) {
@@ -152,9 +153,13 @@ public class ModFunctionManager {
 				} else if(handler instanceof ModClientEventsHandlerSpecific){
 					if (configItem.enabled) {
 						handler.register();
-						((ModClientEventsHandlerSpecific)handler).setIMENameToSwitch(configItem.imeName);
+						((ModClientEventsHandlerSpecific) handler).setIMENameToSwitch(configItem.imeName);
 					} else {
-						handler.unregister();
+						if (handler instanceof OpenChatKeyBindingInputEventsHandler) {
+							((ModClientEventsHandlerSpecific) handler).setIMENameToSwitch(null);
+						} else {
+							handler.unregister();
+						}
 					}
 				}
 			}

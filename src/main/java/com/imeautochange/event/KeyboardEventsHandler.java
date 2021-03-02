@@ -2,7 +2,6 @@ package com.imeautochange.event;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.lwjgl.glfw.GLFW;
@@ -10,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 import com.imeautochange.compat.IOverlayAdapter;
 import com.imeautochange.nativefunction.NativeFunctionManager;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
@@ -28,7 +26,6 @@ public class KeyboardEventsHandler extends ModClientEventsHandler {
 				return;
 			}
 			Class<?> screenClass = screen.getClass();
-			System.out.println("KeyboardEventsHandler "+screenClass.getName());
 			IOverlayAdapter overlayAdapter;
 			for(Entry<IOverlayAdapter, String> entry : overlayIMETable.entrySet()) {
 				overlayAdapter = entry.getKey();

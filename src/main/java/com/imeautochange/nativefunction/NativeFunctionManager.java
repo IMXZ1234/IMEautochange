@@ -15,16 +15,6 @@ import com.imeautochange.util.OSChecker;
  */
 public class NativeFunctionManager 
 {
-	public static final boolean LANGUAGE_INGAME = true;
-	public static final boolean LANGUAGE_INGUI = false;
-	public static final String keyWarningKLInGameNotInstalled = "text.imeautochange.warningKLInGameNotInstalled";
-	public static final String keyWarningKLInGuiNotInstalled = "text.imeautochange.warningKLInGuiNotInstalled";
-	public static final String keyWarningKLInGameNotSupported = "text.imeautochange.warningKLInGameNotSupported";
-	public static final String keyWarningKLInGuiNotSupported = "text.imeautochange.warningKLInGuiNotSupported";
-	public static final String keyInfoKLInGameInstalled = "text.imeautochange.infoKLInGameInstalled";
-	public static final String keyInfoKLInGuiInstalled = "text.imeautochange.infoKLInGuiInstalled";
-	public static final String keyInfoKLInGameSupported = "text.imeautochange.infoKLInGameSupported";
-	public static final String keyInfoKLInGuiSupported = "text.imeautochange.infoKLInGuiSupported";
 	
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static int platform;
@@ -73,34 +63,6 @@ public class NativeFunctionManager
 		return (nativeFunctionProvider != null);
 	}
 	
-	/**
-	 * Initialization. Note when this is called, Minecraft is not fully initialized,
-	 * and attempt should not be made to print anything in ChatGui, 
-	 * which will incur a {@link NullPointerException}.
-	 * 
-	 * @param languageInGameIn
-	 * @param languageInGuiIn
-	 * @param baseDir 
-	 */
-//	public static void init() {
-//		
-//		File dir = new File(baseDir, "ime_support");
-//		switch (platform) {
-//		case OSChecker.PLATFORM_WINDOWS:
-//			supportedLanguageListDirFile = new File(dir, "windows");
-//			break;
-//		case OSChecker.PLATFORM_LINUX:
-//			supportedLanguageListDirFile = new File(dir, "linux");
-//			break;
-//		case OSChecker.PLATFORM_MACOSX:
-//			supportedLanguageListDirFile = new File(dir, "macosx");
-//			break;
-//		default:
-//			supportedLanguageListDirFile = null;
-//			return;
-//		}
-//	}
-	
 	public static boolean switchIMETo(IMEInfo IMEInfo) {
 		if(IMEInfo == null) {
 			LOGGER.error("Specified IME is null.");
@@ -110,7 +72,9 @@ public class NativeFunctionManager
 	}
 	
 	public static boolean switchIMETo(String IMEName) {
-		System.out.println("switching to "+IMEName);
+		if(IMEName == null) {
+			return false;
+		}
 		switch(nativeFunctionProvider.switchIMETo(IMEName)) {
 		case INativeFunctionProvider.RESULT_OK:
 			return true;

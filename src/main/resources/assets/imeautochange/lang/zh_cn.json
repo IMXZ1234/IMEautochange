@@ -1,0 +1,22 @@
+{
+	"imeautochange.gui.configscreen.button.confirm":"完成",
+	"imeautochange.gui.configscreen.button.default":"默认",
+	"imeautochange.gui.configscreen.button.cancel":"取消",
+	"imeautochange.gui.configscreen.button.configelementenabled":"启用",
+	"imeautochange.gui.configscreen.button.configelementdisabled":"禁用",
+	"imeautochange.gui.configscreen.button.refreshimelist":"刷新",
+	
+	"imeautochange.config.ingamegui":"游戏界面",
+	"imeautochange.config.editbookscreen":"书",
+	"imeautochange.config.editsignscreen":"告示牌",
+	"imeautochange.config.anvilscreen":"铁砧",
+	"imeautochange.config.creativescreen":"创造模式背包",
+	"imeautochange.config.jeiingredientlistoverlay":"JEI",
+	"imeautochange.config.chatscreen":"聊天界面",
+	
+	"imeautochange.config.mouseinputaware":"鼠标点击时切换",
+	"imeautochange.config.keyboardinputaware":"键盘按键时切换",
+	"imeautochange.config.guiopenaware":"打开界面时切换",
+	"imeautochange.config.jeiprefixinputaware":"JEI输入框输入前缀时切换",
+	"imeautochange.config.openchatkeybindinginputaware":"打开聊天界面时切换"
+}
