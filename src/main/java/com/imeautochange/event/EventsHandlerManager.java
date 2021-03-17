@@ -21,7 +21,7 @@ public class EventsHandlerManager {
 	 * 
 	 * @param handler
 	 */
-	public static void registerHandler(ModClientEventsHandler handler) {
+	public static void registerHandler(ModClientEventsHandlerCommon handler) {
 		registerHandler("Enable function of " + handler.getClass().getName(), handler);
 	}
 

@@ -37,42 +37,42 @@ public class BuiltInSupport extends IMESupport{
 				new String[] { DESCRIPTION_GUIOPENAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_GUIOPENAWARE }, 
 				new boolean[] { true }, 
-				new String[] { englishIMEName });
+				new String[] { GameControlInputIMEName });
 		ClassConfigInfo editBookScreen = new ClassConfigInfo(EditBookScreen.class, 
 				DESCRIPTION_EDITBOOKSCREEN,
 				DISPLAYNAME_EDITBOOKSCREEN,
 				new String[] { DESCRIPTION_GUIOPENAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_GUIOPENAWARE }, 
 				new boolean[] { true }, 
-				new String[] { defaultIMEName });
+				new String[] { TextInputIMEName });
 		ClassConfigInfo editSignScreen = new ClassConfigInfo(EditSignScreen.class, 
 				DESCRIPTION_EDITSIGNSCREEN,
 				DISPLAYNAME_EDITSIGNSCREEN,
 				new String[] { DESCRIPTION_GUIOPENAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_GUIOPENAWARE }, 
 				new boolean[] { true }, 
-				new String[] { defaultIMEName });
+				new String[] { TextInputIMEName });
 		ClassConfigInfo anvilScreen = new ClassConfigInfo(AnvilScreen.class, 
 				DESCRIPTION_ANVILSCREEN,
 				DISPLAYNAME_ANVILSCREEN,
 				new String[] { DESCRIPTION_GUIOPENAWARE, DESCRIPTION_MOUSEINPUTAWARE, DESCRIPTION_KEYBOARDINPUTAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_GUIOPENAWARE, DISPLAYNAME_MOUSEINPUTAWARE, DISPLAYNAME_KEYBOARDINPUTAWARE }, 
 				new boolean[] { true, true, true }, 
-				new String[] { defaultIMEName, defaultIMEName, englishIMEName });
+				new String[] { TextInputIMEName, TextInputIMEName, GameControlInputIMEName });
 		ClassConfigInfo creativeScreen = new ClassConfigInfo(CreativeScreen.class, 
 				DESCRIPTION_CREATIVESCREEN,
 				DISPLAYNAME_CREATIVESCREEN,
 				new String[] { DESCRIPTION_MOUSEINPUTAWARE, DESCRIPTION_KEYBOARDINPUTAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_MOUSEINPUTAWARE, DISPLAYNAME_KEYBOARDINPUTAWARE }, 
 				new boolean[] { true, true }, 
-				new String[] { defaultIMEName, englishIMEName });
+				new String[] { TextInputIMEName, GameControlInputIMEName });
 		ClassConfigInfo chatScreen = new ClassConfigInfo(ChatScreen.class, 
 				DESCRIPTION_CHATSCREEN,
 				DISPLAYNAME_CHATSCREEN,
 				new String[] { DESCRIPTION_OPENCHATKEYBINGINGINPUTAWARE }, 
 				new ITextComponent[] { DISPLAYNAME_OPENCHATKEYBINGINGINPUTAWARE }, 
 				new boolean[] { true }, 
-				new String[] { defaultIMEName });
+				new String[] { TextInputIMEName });
 		classConfigInfos = new ClassConfigInfo[] {
 				ingameGui, editBookScreen, editSignScreen, anvilScreen, creativeScreen, chatScreen
 		};

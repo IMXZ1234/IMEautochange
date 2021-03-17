@@ -15,7 +15,7 @@ import net.minecraftforge.client.event.GuiScreenEvent.KeyboardKeyPressedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class KeyboardEventsHandler extends ModClientEventsHandler {
+public class KeyboardEventsHandler extends ModClientEventsHandlerCommon {
 	ArrayList<TextFieldWidget> textFieldWidgets = new ArrayList<TextFieldWidget>();
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onKeyboardKeyPressedEvent(KeyboardKeyPressedEvent.Pre event) {
@@ -26,6 +26,8 @@ public class KeyboardEventsHandler extends ModClientEventsHandler {
 				return;
 			}
 			Class<?> screenClass = screen.getClass();
+//			System.out.println("KeyboardKeyPressedEvent.Pre");
+//			System.out.println(screenClass.getName());
 			IOverlayAdapter overlayAdapter;
 			for(Entry<IOverlayAdapter, String> entry : overlayIMETable.entrySet()) {
 				overlayAdapter = entry.getKey();
@@ -33,6 +35,9 @@ public class KeyboardEventsHandler extends ModClientEventsHandler {
 					overlayAdapter.getTextFieldWidgets(textFieldWidgets);
 					for (TextFieldWidget textField : textFieldWidgets) {
 						if (textField.getVisible() && textField.isFocused()) {
+							System.out.println("textField overlay!"+screen.getClass().getName());
+							System.out.println(entry.getKey().getClass().getName());
+							System.out.println(entry.getValue());
 							NativeFunctionManager.switchIMETo(overlayIMETable.get(entry.getKey()));
 							return;
 						}

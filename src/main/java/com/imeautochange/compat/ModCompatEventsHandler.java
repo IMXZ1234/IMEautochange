@@ -1,10 +1,10 @@
 package com.imeautochange.compat;
 
-import com.imeautochange.event.ModClientEventsHandler;
+import com.imeautochange.event.ModClientEventsHandlerCommon;
 
 import net.minecraftforge.common.MinecraftForge;
 
-public abstract class ModCompatEventsHandler extends ModClientEventsHandler {
+public abstract class ModCompatEventsHandler extends ModClientEventsHandlerCommon {
 	private boolean isModLoaded = false;
 	
 	@Override

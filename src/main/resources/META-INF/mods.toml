@@ -14,7 +14,7 @@ loaderVersion="[35,)" #mandatory This is typically bumped every Minecraft versio
 license="The MIT License (MIT)"
 
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://my.issue.tracker/" #optional
+issueTrackerURL="https://github.com/IMXZ1234/IMEautochange/issues/" #optional
 
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -25,7 +25,7 @@ modId="imeautochange" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 # ${file.jarVersion} will substitute the value of the Implementation-Version as read from the mod's JAR file metadata
 # see the associated build.gradle script for how to populate this completely automatically during a build
-version="${version}" #mandatory
+version="${file.jarVersion}" #mandatory
 
  # A display name for the mod
 displayName="IMEautochange" #mandatory
@@ -34,13 +34,13 @@ displayName="IMEautochange" #mandatory
 updateJSONURL="http://myurl.me/" #optional
 
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://example.com/" #optional
+displayURL="https://github.com/IMXZ1234/IMEautochange/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="IMXZ" #optional
 
 # A text field displayed in the mod UI
 authors="IMXZ" #optional

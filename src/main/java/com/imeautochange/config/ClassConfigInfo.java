@@ -38,7 +38,7 @@ public class ClassConfigInfo {
 	public ITextComponent displayName;
 	public String description;
 	public boolean isOverlay;
-	public HashMap<String, ConfigItem> configItems;
+	public HashMap<String, ClassConfigItem> configItems;
 	
 	/**
 	 * Deep copy constructor
@@ -50,9 +50,9 @@ public class ClassConfigInfo {
 		this.displayName = classConfigInfo.displayName;
 		this.description = classConfigInfo.description;
 		this.isOverlay = classConfigInfo.isOverlay;
-		this.configItems = new HashMap<String, ConfigItem>();
-		for(Entry<String, ConfigItem> entry : classConfigInfo.configItems.entrySet()){
-			this.configItems.put(entry.getKey(), new ConfigItem(entry.getValue()));
+		this.configItems = new HashMap<String, ClassConfigItem>();
+		for(Entry<String, ClassConfigItem> entry : classConfigInfo.configItems.entrySet()){
+			this.configItems.put(entry.getKey(), new ClassConfigItem(entry.getValue()));
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class ClassConfigInfo {
 	 * @param classDescription
 	 * @param configItems
 	 */
-	public ClassConfigInfo(Class<?> clazz, String classDescription, ITextComponent classDisplayName, HashMap<String, ConfigItem> configItems){
+	public ClassConfigInfo(Class<?> clazz, String classDescription, ITextComponent classDisplayName, HashMap<String, ClassConfigItem> configItems){
 		this.clazz = clazz;
 		this.overlayAdapter = null;
 		this.description = classDescription;
@@ -89,7 +89,7 @@ public class ClassConfigInfo {
 		this.displayName = classDisplayName;
 		this.description = classDescription;
 		this.isOverlay = false;
-		this.configItems = new HashMap<String, ConfigItem>();
+		this.configItems = new HashMap<String, ClassConfigItem>();
 		int itemNum = itemDescription.length;
 		if(itemNum>defaultEnabled.length) {
 			itemNum = defaultEnabled.length;
@@ -102,7 +102,7 @@ public class ClassConfigInfo {
 		}
 		for(int i =0;i<itemNum;i++) {
 			System.out.println("itemDescription"+itemDescription[i]);
-			this.configItems.put(itemDescription[i], new ConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
+			this.configItems.put(itemDescription[i], new ClassConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class ClassConfigInfo {
 	 * @param classDescription
 	 * @param configItems
 	 */
-	public ClassConfigInfo(IOverlayAdapter overlayAdapter, String classDescription, ITextComponent classDisplayName, HashMap<String, ConfigItem> configItems){
+	public ClassConfigInfo(IOverlayAdapter overlayAdapter, String classDescription, ITextComponent classDisplayName, HashMap<String, ClassConfigItem> configItems){
 		this.clazz = null;
 		this.overlayAdapter = overlayAdapter;
 		this.displayName = classDisplayName;
@@ -139,7 +139,7 @@ public class ClassConfigInfo {
 		this.displayName = classDisplayName;
 		this.description = classDescription;
 		this.isOverlay = true;
-		this.configItems = new HashMap<String, ConfigItem>();
+		this.configItems = new HashMap<String, ClassConfigItem>();
 		int itemNum = itemDescription.length;
 		if(itemNum>defaultEnabled.length) {
 			itemNum = defaultEnabled.length;
@@ -152,7 +152,7 @@ public class ClassConfigInfo {
 		}
 		for(int i =0;i<itemNum;i++) {
 			System.out.println("itemDescription"+itemDescription[i]);
-			this.configItems.put(itemDescription[i], new ConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
+			this.configItems.put(itemDescription[i], new ClassConfigItem(itemDescription[i], itemDislayName[i], defaultIMEName[i], defaultEnabled[i]));
 		}
 	}
 	
@@ -170,7 +170,7 @@ public class ClassConfigInfo {
 		}
 		builder.append("\nConfig Items:");
 		int i = 0;
-		for (Entry<String, ConfigItem> entry : configItems.entrySet()) {
+		for (Entry<String, ClassConfigItem> entry : configItems.entrySet()) {
 			builder.append("\n(" + i + ") ");
 			builder.append(entry.getValue().toString());
 			i++;

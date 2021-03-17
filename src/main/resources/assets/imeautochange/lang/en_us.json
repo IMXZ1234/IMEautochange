@@ -5,6 +5,18 @@
 	"imeautochange.gui.configscreen.button.configelementenabled":"Enabled",
 	"imeautochange.gui.configscreen.button.configelementdisabled":"Disabled",
 	"imeautochange.gui.configscreen.button.refreshimelist":"Refresh",
+	"imeautochange.gui.configscreen.tip.line1":"Select an entry on the",
+	"imeautochange.gui.configscreen.tip.line2":"right to edit config.",
+	"imeautochange.gui.configscreen.tip.line3":"Activate a text box and",
+	"imeautochange.gui.configscreen.tip.line4":"select an entry on the",
+	"imeautochange.gui.configscreen.tip.line5":"left to change target IME.",
+	"imeautochange.gui.configscreen.button.backtogame":"Back To Game",
+	"imeautochange.gui.configscreen.button.functionconfig":"Function Configuration",
+	"imeautochange.gui.configscreen.button.defaultimeconfig":"Change Default IME",
+	"imeautochange.gui.configscreen.title.configselectscreen":"IMEautochange Config",
+	
+	"imeautochange.config.general.textinputimename":"Text Input IME Name",
+	"imeautochange.config.general.gamecontrolinputimename":"Game Control Input IME Name",
 	
 	"imeautochange.config.ingamegui":"In Game",
 	"imeautochange.config.editbookscreen":"Edit Book",

@@ -16,7 +16,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class OpenChatKeyBindingInputEventsHandler extends ModClientEventsHandlerSpecific {
 	@SubscribeEvent
 	public void onKeyBindingInputEvent(KeyInputEvent event) {
+//		System.out.println("onKeyBindingInputEvent");
 		if (ModKeyBinding.OPEN_CHAT_WITH_IME_TOGGLED.isPressed()) {
+			System.out.println("OPEN_CHAT_WITH_IME_TOGGLED");
 			Minecraft.getInstance().displayGuiScreen(new ChatScreen(""));
 			NativeFunctionManager.switchIMETo(imeNameToSwitch);
 		}

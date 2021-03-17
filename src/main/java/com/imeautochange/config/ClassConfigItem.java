@@ -1,5 +1,7 @@
 package com.imeautochange.config;
 
+import com.imeautochange.gui.FunctionConfigScreen;
+
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -9,14 +11,14 @@ import net.minecraft.util.text.ITextComponent;
  * @author IMXZ
  *
  */
-public class ConfigItem {
+public class ClassConfigItem {
 	/**
 	 * Used to identify a certain handler in the internal, also serving as the key
-	 * for this ConfigItem in the configuration file.
+	 * for this ClassConfigItem in the configuration file.
 	 */
 	public String description;
 	/**
-	 * Used to be displayed in {@link ConfigScreen}
+	 * Used to be displayed in {@link FunctionConfigScreen}
 	 */
 	public ITextComponent displayName;
 	public String imeName;
@@ -24,7 +26,7 @@ public class ConfigItem {
 	public String defaultIMEName;
 	public boolean defaultEnabled;
 
-	public ConfigItem(ConfigItem configItem) {
+	public ClassConfigItem(ClassConfigItem configItem) {
 		this.description = configItem.description;
 		this.displayName = configItem.displayName;
 		this.defaultEnabled = configItem.defaultEnabled;
@@ -33,7 +35,7 @@ public class ConfigItem {
 		this.imeName = configItem.imeName;
 	}
 
-	public ConfigItem(String description, ITextComponent displayName, String defaultIMEName, boolean defaultEnabled) {
+	public ClassConfigItem(String description, ITextComponent displayName, String defaultIMEName, boolean defaultEnabled) {
 		this.description = description;
 		this.displayName = displayName;
 		this.defaultEnabled = defaultEnabled;
@@ -42,7 +44,7 @@ public class ConfigItem {
 		this.imeName = defaultIMEName;
 	}
 
-	public ConfigItem(String description, ITextComponent displayName, String imeName, boolean enabled,
+	public ClassConfigItem(String description, ITextComponent displayName, String imeName, boolean enabled,
 			String defaultIMEName, boolean defaultEnabled) {
 		this.description = description;
 		this.displayName = displayName;

@@ -1,4 +1,4 @@
-package com.imeautochange.config.widget;
+package com.imeautochange.gui.widget;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;

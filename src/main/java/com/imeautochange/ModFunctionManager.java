@@ -11,14 +11,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.imeautochange.compat.startup.BuiltInModSupport;
 import com.imeautochange.config.ClassConfigInfo;
-import com.imeautochange.config.ConfigItem;
+import com.imeautochange.config.ClassConfigItem;
 import com.imeautochange.config.ConfigManager;
+import com.imeautochange.config.GeneralConfigItem;
 import com.imeautochange.config.IMEInfo;
 import com.imeautochange.config.ModKeyBinding;
 import com.imeautochange.event.EventsHandlerManager;
 import com.imeautochange.event.KeyBindingInputEventsHandler;
-import com.imeautochange.event.ModClientEventsHandler;
 import com.imeautochange.event.ModClientEventsHandlerBase;
+import com.imeautochange.event.ModClientEventsHandlerCommon;
 import com.imeautochange.event.ModClientEventsHandlerSpecific;
 import com.imeautochange.event.OpenChatKeyBindingInputEventsHandler;
 import com.imeautochange.nativefunction.NativeFunctionManager;
@@ -30,13 +31,14 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class ModFunctionManager {
-	private static HashMap<Class<?>, ClassConfigInfo> listenerClassConfigInfo;
+	private static HashMap<String, ClassConfigInfo> listenerClassConfigInfo;
+	private static HashMap<String, GeneralConfigItem> generalConfigItems;
 	private static boolean modFunctionEnabled = false;
 	private static KeyBindingInputEventsHandler keyBindingInputEventsHandler;
 	private static HashMap<String, ModClientEventsHandlerBase> eventsHandlers;
 	private static ArrayList<IMEInfo> imeInfoList;
-	private static String defaultIMEName;
-	private static String englishIMEName;
+//	private static String textInputIMEName;
+//	private static String gameControlInputIMEName;
 	
 	private static Logger LOGGER = LogManager.getLogger();
 
@@ -50,11 +52,14 @@ public class ModFunctionManager {
 		if(!NativeFunctionManager.doesFunctionProviderExist()) {
 			return;
 		}
-		defaultIMEName = NativeFunctionManager.getDefaultIME().name;
-		englishIMEName = NativeFunctionManager.getEnglishIME().name;
+		modFunctionEnabled = true;
+		// Initialize General Configuration
+		ConfigManager.initGeneralConfigItems();
+		// Load General Configuration
+		ConfigManager.updateGeneralConfigFromFile();
+		generalConfigItems = ConfigManager.getGeneralConfigItems();
 		// Already reloaded during initialization of NativeFunctionManager.
 		imeInfoList = NativeFunctionManager.getIMEInfoList(false);
-		modFunctionEnabled = true;
 		// Initialization
 		IMESupportManager.registerIMESupport(new BuiltInSupport());
 		IMESupportManager.registerIMESupport(new BuiltInModSupport());
@@ -62,8 +67,8 @@ public class ModFunctionManager {
 		// Initialize members(get a reference from other managers)
 		listenerClassConfigInfo = ConfigManager.getListenerClassConfigInfo();
 		eventsHandlers = EventsHandlerManager.getEventsHandlers();
-		// Load Configuration
-		ConfigManager.updateConfigFromFile();
+		// Load Function Configuration
+		ConfigManager.updateFunctionConfigFromFile();
 	    // Initialize Events Handlers
 //	    updateHandlersListenerTable(listenerClassConfigInfo);
 	    updateHandlersCachedFieldList();
@@ -76,10 +81,9 @@ public class ModFunctionManager {
 		event.enqueueWork(() -> ModKeyBinding.registerKeyBinding());
 		keyBindingInputEventsHandler = new KeyBindingInputEventsHandler();
 		keyBindingInputEventsHandler.register();
-	    NativeFunctionManager.switchIMETo(imeInfoList.get(0));
 	}
 	
-	public static HashMap<Class<?>, ClassConfigInfo> getListenerClassConfigInfo() {
+	public static HashMap<String, ClassConfigInfo> getListenerClassConfigInfo() {
 		return listenerClassConfigInfo;
 	}
 	
@@ -87,25 +91,33 @@ public class ModFunctionManager {
 		return imeInfoList;
 	}
 	
-	public static String getDefaultIMEName() {
-		return defaultIMEName;
-	}
-	
-	public static String getEnglishIMEName() {
-		return englishIMEName;
-	}
+//	public static String getTextInputIMEName() {
+//		return textInputIMEName;
+//	}
+//	
+//	public static String getGameControlInputIMEName() {
+//		return gameControlInputIMEName;
+//	}
+//	
+//	public static void setTextInputIMEName(String textInputIMENameIn) {
+//		textInputIMEName = textInputIMENameIn;
+//	}
+//	
+//	public static void setGameControlInputIMEName(String gameControlInputIMENameIn) {
+//		gameControlInputIMEName = gameControlInputIMENameIn;
+//	}
 	
 	public static void updateHandlersCachedFieldList() {
 		LOGGER.info("Caching Reflection Fields...");
-		for(Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : listenerClassConfigInfo.entrySet()) {
+		for(Entry<String, ClassConfigInfo> classConfigInfoEntry : listenerClassConfigInfo.entrySet()) {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
 				ArrayList<Field> classFields = new ArrayList<Field>();
 				if(classConfigInfo.isOverlay) {
 					if(ReflectionUtil.getFieldList(classConfigInfo.overlayAdapter.getOverlayClass(), TextFieldWidget.class, classFields)) {
 						for(String handlerDescription : classConfigInfo.configItems.keySet()) {
 							ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(handlerDescription);
-							if(handler instanceof ModClientEventsHandler) {
-								((ModClientEventsHandler)handler).cachedOverlayFieldList.put(classConfigInfo.overlayAdapter, classFields);
+							if(handler instanceof ModClientEventsHandlerCommon) {
+								((ModClientEventsHandlerCommon)handler).cachedOverlayFieldList.put(classConfigInfo.overlayAdapter, classFields);
 							}
 						}
 					}
@@ -113,8 +125,8 @@ public class ModFunctionManager {
 					if(ReflectionUtil.getFieldList(classConfigInfo.clazz, TextFieldWidget.class, classFields)) {
 						for(String handlerDescription : classConfigInfo.configItems.keySet()) {
 							ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(handlerDescription);
-							if(handler instanceof ModClientEventsHandler) {
-								((ModClientEventsHandler)handler).cachedScreenFieldTable.put(classConfigInfo.clazz, classFields);
+							if(handler instanceof ModClientEventsHandlerCommon) {
+								((ModClientEventsHandlerCommon)handler).cachedScreenFieldTable.put(classConfigInfo.clazz, classFields);
 							}
 						}
 					}
@@ -126,29 +138,31 @@ public class ModFunctionManager {
 //		ConfigManager.loadFromConfigFile();
 //	}
 	
-	public static void updateHandlersListenerTable(HashMap<Class<?>, ClassConfigInfo> cachedChanges) {
+	public static void updateHandlersListenerTable(HashMap<String, ClassConfigInfo> cachedChanges) {
 		LOGGER.info("Updating Handlers Internal table...");
-		for (Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : cachedChanges.entrySet()) {
+		for (Entry<String, ClassConfigInfo> classConfigInfoEntry : cachedChanges.entrySet()) {
 			updateHandlersListenerTable(classConfigInfoEntry.getValue());
 		}
 	}
 
 	public static void updateHandlersListenerTable(ClassConfigInfo classConfigInfo) {
-		for (Entry<String, ConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
+		System.out.println("ClassConfigInfo");
+		System.out.println(classConfigInfo);
+		for (Entry<String, ClassConfigItem> configItemsEntry : classConfigInfo.configItems.entrySet()) {
 			ModClientEventsHandlerBase handler = EventsHandlerManager.getHandlerIdByDescription(configItemsEntry.getKey());
 			if (handler != null) {
-				ConfigItem configItem = configItemsEntry.getValue();
-				if (handler instanceof ModClientEventsHandler) {
+				ClassConfigItem configItem = configItemsEntry.getValue();
+				if (handler instanceof ModClientEventsHandlerCommon) {
 					if (configItem.enabled) {
 						if (classConfigInfo.isOverlay)
-							((ModClientEventsHandler) handler).addOverlayListenerClass(classConfigInfo.overlayAdapter, configItem.imeName);
+							((ModClientEventsHandlerCommon) handler).addOverlayListenerClass(classConfigInfo.overlayAdapter, configItem.imeName);
 						else
-							((ModClientEventsHandler) handler).addScreenListenerClass(classConfigInfo.clazz, configItem.imeName);
+							((ModClientEventsHandlerCommon) handler).addScreenListenerClass(classConfigInfo.clazz, configItem.imeName);
 					} else {
 						if (classConfigInfo.isOverlay)
-							((ModClientEventsHandler) handler).removeOverlayListenerClass(classConfigInfo.overlayAdapter);
+							((ModClientEventsHandlerCommon) handler).removeOverlayListenerClass(classConfigInfo.overlayAdapter);
 						else
-							((ModClientEventsHandler) handler).removeScreenListenerClass(classConfigInfo.clazz);
+							((ModClientEventsHandlerCommon) handler).removeScreenListenerClass(classConfigInfo.clazz);
 					}
 				} else if(handler instanceof ModClientEventsHandlerSpecific){
 					if (configItem.enabled) {

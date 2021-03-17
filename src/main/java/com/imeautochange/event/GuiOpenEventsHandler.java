@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class GuiOpenEventsHandler extends ModClientEventsHandler {
+public class GuiOpenEventsHandler extends ModClientEventsHandlerCommon {
 	public static String IngameGuiIMEName;
 
 	@SubscribeEvent
@@ -19,6 +19,8 @@ public class GuiOpenEventsHandler extends ModClientEventsHandler {
 			return;
 		}
 		Class<?> screenClass = screen.getClass();
+//		System.out.println("onGuiOpenEvent");
+//		System.out.println(screenClass.getName());
 		String imeInfo = screenIMETable.get(screenClass);
 		if(imeInfo != null) {
 			NativeFunctionManager.switchIMETo(imeInfo);

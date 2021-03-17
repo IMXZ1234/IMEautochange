@@ -17,6 +17,7 @@ import com.imeautochange.nativefunction.windows.COMInterfaceITfInputProcessorPro
 import com.imeautochange.nativefunction.windows.COMInterfaceITfInputProcessorProfiles;
 import com.imeautochange.nativefunction.windows.Input;
 import com.imeautochange.nativefunction.windows.LAYOUTORTIPPROFILE;
+import com.imeautochange.nativefunction.windows.Ole32;
 import com.imeautochange.nativefunction.windows.TF_INPUTPROCESSORPROFILE;
 import com.imeautochange.nativefunction.windows.Win32Util;
 import com.sun.jna.ptr.IntByReference;
@@ -77,7 +78,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	public static WindowsNativeFunctionProvider INSTANCE = new WindowsNativeFunctionProvider();
 	
 	private WindowsNativeFunctionProvider() {
-		COMHelper.initCOM();
+		COMHelper.initCOM(Ole32.COINIT_APARTMENTTHREADED);
 		profileTable = new HashMap<String, LAYOUTORTIPPROFILE>();
 		defaultProfile = null;
 		defaultProfileName = null;
@@ -95,50 +96,55 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	@Override
 	public int switchIMETo(String imeName) {
 		LAYOUTORTIPPROFILE profile = profileTable.get(imeName);
+		System.out.println(LAYOUTORTIPPROFILE.getStringRepresentation(profile));
 		if (profile == null) {
 			return RESULT_NOTINSTALLED;
 		}
-		int hResult;
+		int hResult = COMInterface.S_OK;
 		ShortByReference langid = new ShortByReference();
-		IntByReference bEnable = new IntByReference();
+//		IntByReference bEnable = new IntByReference();
 		
-		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.IsEnabledLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, bEnable);
-		if(hResult!=COMInterface.S_OK) {
-			LOGGER.error("IsEnabledLanguageProfile Error!");
-		}
+//		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.IsEnabledLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, bEnable);
+//		if(hResult!=COMInterface.S_OK) {
+//			LOGGER.error("IsEnabledLanguageProfile Error!");
+//		}
 		hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.GetCurrentLanguage(langid);
+		System.out.println("GetCurrentLanguage: "+langid);
 		if(hResult!=COMInterface.S_OK) {
 			LOGGER.error("GetCurrentLanguage Error!");
 		}
         if (profile.langid != langid.getValue()) {
         	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.ChangeCurrentLanguage(profile.langid);
+        	System.out.println("ChangeCurrentLanguage: from "+langid.getValue()+" to "+profile.langid);
         	if(hResult!=COMInterface.S_OK) {
         		LOGGER.error("ChangeCurrentLanguage Error!");
     			return RESULT_ERROR;
     		}
         }
-        if (bEnable.getValue() != 0) {
-        	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.EnableLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, true);
-        	if(hResult!=COMInterface.S_OK) {
-        		LOGGER.error("EnableLanguageProfile Error!");
-    			return RESULT_ERROR;
-    		}
-        }
+//        if (bEnable.getValue() != 0) {
+//        	hResult = COMInterfaceITfInputProcessorProfiles.INSTANCE.EnableLanguageProfile(profile.clsid, profile.langid, profile.guidProfile, true);
+//        	if(hResult!=COMInterface.S_OK) {
+//        		LOGGER.error("EnableLanguageProfile Error!");
+//    			return RESULT_ERROR;
+//    		}
+//        }
  		if(profile.dwProfileType == LAYOUTORTIPPROFILE.LOTP_KEYBOARDLAYOUT) {
  			long hkl = Long.parseUnsignedLong((String.valueOf(profile.szId).trim().split(":")[1]),16);
  			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_KEYBOARDLAYOUT, profile.langid, 
  					profile.clsid, profile.guidProfile, hkl, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
-// 			if(hResult!=COMInterface.S_OK) {
-//        		LOGGER.error("ActivateProfile Error!");
-//    			return RESULT_ERROR;
-//    		}
+ 			if(hResult!=COMInterface.S_OK) {
+ 				System.out.println("hResult: "+hResult);
+        		LOGGER.error("ActivateProfile Error!");
+    			return RESULT_ERROR;
+    		}
  		}else {
  			hResult = COMInterfaceITfInputProcessorProfileMgr.INSTANCE.ActivateProfile(TF_INPUTPROCESSORPROFILE.TF_PROFILETYPE_INPUTPROCESSOR, profile.langid, 
  					profile.clsid, profile.guidProfile, 0, COMInterfaceITfInputProcessorProfileMgr.TF_IPPMF_FORPROCESS);
-// 			if(hResult!=COMInterface.S_OK) {
-//        		LOGGER.error("ActivateProfile Error!");
-//    			return RESULT_ERROR;
-//    		}
+ 			System.out.println("hResult: "+hResult);
+ 			if(hResult!=COMInterface.S_OK) {
+        		LOGGER.error("ActivateProfile Error!");
+    			return RESULT_ERROR;
+    		}
  		}
 		return RESULT_OK;
 	}
@@ -154,6 +160,7 @@ public final class WindowsNativeFunctionProvider implements INativeFunctionProvi
 	 */
 	@Override
 	public boolean reloadIMEList() {
+		System.out.println("reloadIMEList");
 		profileTable.clear();
 		LAYOUTORTIPPROFILE lpLayoutOrTipProfile[];
 		

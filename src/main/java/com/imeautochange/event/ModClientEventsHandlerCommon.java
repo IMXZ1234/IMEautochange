@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import com.imeautochange.compat.IOverlayAdapter;
 
-public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase {
+public abstract class ModClientEventsHandlerCommon extends ModClientEventsHandlerBase {
 	
 	public static final int RESULT_CLASS_NOT_FOUND = 0x00000001;
 	public static final int RESULT_FIELD_NOT_FOUND = 0x00000002;
@@ -20,7 +20,7 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 	public HashMap<Class<?>, ArrayList<Field>> cachedScreenFieldTable = new HashMap<Class<?>, ArrayList<Field>>();
 	public HashMap<IOverlayAdapter, ArrayList<Field>> cachedOverlayFieldList = new HashMap<IOverlayAdapter, ArrayList<Field>>();
 
-	public ModClientEventsHandler() {
+	public ModClientEventsHandlerCommon() {
 		isRegistered = false;
 		screenIMETable = new HashMap<Class<?>, String>();
 		overlayIMETable = new HashMap<IOverlayAdapter, String>();
@@ -65,6 +65,8 @@ public abstract class ModClientEventsHandler extends ModClientEventsHandlerBase 
 	
 	public int removeOverlayListenerClass(IOverlayAdapter overlayAdapter) {
 		String last;
+		System.out.println(this.getClass().getName());
+		System.out.println("removing"+overlayAdapter.getClass().getName());
 		last = overlayIMETable.remove(overlayAdapter);
 		if(last == null) {
 			return RESULT_CLASS_NOT_FOUND | RESULT_FAIL;

@@ -1,7 +1,7 @@
-package com.imeautochange.config.widget;
+package com.imeautochange.gui.widget;
 
-import com.imeautochange.config.ConfigScreen;
 import com.imeautochange.config.IMEInfo;
+import com.imeautochange.gui.IMEInfoEntryListScreen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -13,12 +13,12 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.IMEInfoEntry> {
 	
-    private final ConfigScreen parent;
+    private final IMEInfoEntryListScreen parent;
     private final int listWidth;
-	public IMEInfoEntryListWidget(ConfigScreen parent, int listWidth, int top, int bottom)
+	public IMEInfoEntryListWidget(IMEInfoEntryListScreen imeInfoEntryListScreen, int listWidth, int top, int bottom)
     {
-        super(parent.getMinecraft(), listWidth, parent.height, top, bottom, parent.getFontRenderer().FONT_HEIGHT * 2 + 8);
-        this.parent = parent;
+        super(imeInfoEntryListScreen.getMinecraft(), listWidth, imeInfoEntryListScreen.height, top, bottom, imeInfoEntryListScreen.getFontRenderer().FONT_HEIGHT * 2 + 8);
+        this.parent = imeInfoEntryListScreen;
         this.listWidth = listWidth;
         this.refreshList();
     }
@@ -47,11 +47,11 @@ public class IMEInfoEntryListWidget extends ExtendedList<IMEInfoEntryListWidget.
         }
     }
 
-    @Override
-    protected void renderBackground(MatrixStack mStack)
-    {
-        this.parent.renderBackground(mStack);
-    }
+//    @Override
+//    protected void renderBackground(MatrixStack mStack)
+//    {
+//        this.parent.renderBackground(mStack);
+//    }
     
 	public class IMEInfoEntry extends ExtendedList.AbstractListEntry<IMEInfoEntry>{
     	

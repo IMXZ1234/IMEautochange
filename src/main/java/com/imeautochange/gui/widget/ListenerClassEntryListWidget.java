@@ -1,9 +1,9 @@
-package com.imeautochange.config.widget;
+package com.imeautochange.gui.widget;
 
 import java.util.Map.Entry;
 
 import com.imeautochange.config.ClassConfigInfo;
-import com.imeautochange.config.ConfigScreen;
+import com.imeautochange.gui.FunctionConfigScreen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -13,9 +13,9 @@ import net.minecraft.util.text.LanguageMap;
 
 public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntryListWidget.ListenerClassEntry> {
 	
-    private final ConfigScreen parent;
+    private final FunctionConfigScreen parent;
     private final int listWidth;
-	public ListenerClassEntryListWidget(ConfigScreen parent, int listWidth, int top, int bottom)
+	public ListenerClassEntryListWidget(FunctionConfigScreen parent, int listWidth, int top, int bottom)
     {
         super(parent.getMinecraft(), listWidth, parent.height, top, bottom, parent.getFontRenderer().FONT_HEIGHT * 2 + 8);
         this.parent = parent;
@@ -42,8 +42,8 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
 
     public void refreshList() {
         this.clearEntries();
-        for(Entry<Class<?>, ClassConfigInfo> entry : parent.getListenerClassInfo().entrySet()) {
-        	addEntry(new ListenerClassEntry(entry.getKey(), entry.getValue()));
+        for(Entry<String, ClassConfigInfo> entry : parent.getListenerClassInfo().entrySet()) {
+        	addEntry(new ListenerClassEntry(entry.getValue()));
         }
     }
 
@@ -57,10 +57,8 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
     	
 
         private final ClassConfigInfo classConfigInfo;
-        private final Class<?> clazz;
         
-        ListenerClassEntry(Class<?> clazz, ClassConfigInfo classConfigInfo){
-        	this.clazz = clazz;
+        ListenerClassEntry(ClassConfigInfo classConfigInfo){
         	this.classConfigInfo = classConfigInfo;
         }
         
@@ -68,13 +66,9 @@ public class ListenerClassEntryListWidget extends ExtendedList<ListenerClassEntr
         	return classConfigInfo;
         }
         
-        public Class<?> getClazz() {
-			return clazz;
-		}
-        
     	@Override
     	public void render(MatrixStack mStack, int entryIdx, int top, int left, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean p_194999_5_, float partialTicks) {
-            FontRenderer font = parent.getFontRenderer();
+    		FontRenderer font = parent.getFontRenderer();
             font.func_238422_b_(mStack, LanguageMap.getInstance().func_241870_a(ITextProperties.func_240655_a_(font.func_238417_a_(classConfigInfo.displayName, listWidth))), left + 3, top + 2, 0xFFFFFF);
     	}
     	@Override

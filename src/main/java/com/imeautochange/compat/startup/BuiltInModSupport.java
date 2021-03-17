@@ -28,7 +28,7 @@ public class BuiltInModSupport extends IMESupport{
 					new String[] { DESCRIPTION_MOUSEINPUTAWARE, DESCRIPTION_KEYBOARDINPUTAWARE, DESCRIPTION_JEIPREFIXINPUTAWARE },
 					new ITextComponent[] { DISPLAYNAME_MOUSEINPUTAWARE, DISPLAYNAME_KEYBOARDINPUTAWARE, DISPLAYNAME_JEIPREFIXINPUTAWARE }, 
 					new boolean[] { true, true, true },
-					new String[] { defaultIMEName, englishIMEName, englishIMEName });
+					new String[] { TextInputIMEName, GameControlInputIMEName, GameControlInputIMEName });
 			_classConfigInfos.add(jeiIngredientListOverlay);
 		}
 		handlerDescriptions = new String[_handlerDescriptions.size()];

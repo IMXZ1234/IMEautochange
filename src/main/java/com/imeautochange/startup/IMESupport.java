@@ -1,6 +1,5 @@
 package com.imeautochange.startup;
 
-import com.imeautochange.ModFunctionManager;
 import com.imeautochange.config.ClassConfigInfo;
 import com.imeautochange.config.ConfigManager;
 import com.imeautochange.event.EventsHandlerManager;
@@ -37,8 +36,8 @@ public abstract class IMESupport {
 	public static final ITextComponent DISPLAYNAME_JEIINGREDIENTLISTOVERLAY = new TranslationTextComponent("imeautochange.config.jeiingredientlistoverlay");
 	public static final ITextComponent DISPLAYNAME_CHATSCREEN = new TranslationTextComponent("imeautochange.config.chatscreen");
 	
-	public static String defaultIMEName = ModFunctionManager.getDefaultIMEName();
-	public static String englishIMEName = ModFunctionManager.getEnglishIMEName();
+	public static String TextInputIMEName = ConfigManager.getTextInputIMEName();
+	public static String GameControlInputIMEName = ConfigManager.getGameControlInputIMEName();
 
 	public String[] handlerDescriptions;
 	public ModClientEventsHandlerBase[] handlers;

@@ -5,6 +5,18 @@
 	"imeautochange.gui.configscreen.button.configelementenabled":"启用",
 	"imeautochange.gui.configscreen.button.configelementdisabled":"禁用",
 	"imeautochange.gui.configscreen.button.refreshimelist":"刷新",
+	"imeautochange.gui.configscreen.tip.line1":"选择右侧项目更改选项。",
+	"imeautochange.gui.configscreen.tip.line2":"激活文本框后点击选择",
+	"imeautochange.gui.configscreen.tip.line3":"左侧项目以修改目标输入法。",
+	"imeautochange.gui.configscreen.tip.line4":"",
+	"imeautochange.gui.configscreen.tip.line5":"",
+	"imeautochange.gui.configscreen.button.backtogame":"回到游戏",
+	"imeautochange.gui.configscreen.button.functionconfig":"功能设置",
+	"imeautochange.gui.configscreen.button.defaultimeconfig":"设置默认输入法",
+	"imeautochange.gui.configscreen.title.configselectscreen":"输入法自动切换设置",
+	
+	"imeautochange.config.general.textinputimename":"文本输入时使用输入法",
+	"imeautochange.config.general.gamecontrolinputimename":"游戏操作中使用输入法",
 	
 	"imeautochange.config.ingamegui":"游戏界面",
 	"imeautochange.config.editbookscreen":"书",

@@ -13,16 +13,18 @@ import net.minecraftforge.client.event.GuiScreenEvent.MouseClickedEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class MouseEventsHandler extends ModClientEventsHandler {
+public class MouseEventsHandler extends ModClientEventsHandlerCommon {
 	private ArrayList<TextFieldWidget> textFieldWidgets = new ArrayList<TextFieldWidget>();
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onMouseClickedEvent(MouseClickedEvent event) {
+	public void onMouseClickedEvent(MouseClickedEvent.Pre event) {
 		if (event.getButton() == 0) {
 			Screen screen = event.getGui();
 			if(screen == null) {
 				return;
 			}
 			Class<?> screenClass = screen.getClass();
+//			System.out.println("MouseClickedEvent.Pre");
+//			System.out.println(screenClass.getName());
 			double mouseX = event.getMouseX();
 			double mouseY = event.getMouseY();
 			IOverlayAdapter overlayAdapter;

@@ -1,8 +1,7 @@
 package com.imeautochange.event;
 
-import com.imeautochange.IMEautochange;
-import com.imeautochange.config.ConfigScreen;
 import com.imeautochange.config.ModKeyBinding;
+import com.imeautochange.gui.ConfigSelectScreen;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -17,11 +16,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class KeyBindingInputEventsHandler extends ModClientEventsHandlerBase {
 	@SubscribeEvent
 	public void onKeyBindingInputEvent(KeyInputEvent event) {
+//		System.out.println("onKeyBindingInputEvent");
 		if (ModKeyBinding.OPEN_CONFIG.isPressed()) {
+			System.out.println("OPEN_CONFIG");
 			Minecraft.getInstance()
-					.displayGuiScreen(new ConfigScreen(new TranslationTextComponent(IMEautochange.MOD_ID + ".test")));
+					.displayGuiScreen(new ConfigSelectScreen(new TranslationTextComponent("imeautochange.gui.screen.configselectscreen")));
 		}
-
 	}
 	
 }

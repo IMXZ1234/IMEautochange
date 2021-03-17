@@ -16,8 +16,8 @@ public abstract class COMHelper {
 	public static final int E_NOINTERFACE = 0x80004002;
 	public static final int E_POINTER = 0x80004003;
 	public static final int S_OK = 0;
-	public static void initCOM(){
-		Ole32.INSTANCE.CoInitialize(0);
+	public static void initCOM(int coInit){
+		Ole32.INSTANCE.CoInitializeEx(0, coInit);
 		isCOMInitialized = true;
 	}
 	public static void uninitCOM(){

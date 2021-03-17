@@ -22,6 +22,7 @@ public class JEICompatPrefixKeyboardInputHandler extends ModClientEventsHandlerS
 	
 	@SubscribeEvent(receiveCanceled = true)
 	public void onJEIIngredientListOverlayPrefixKeyboardInput(KeyboardCharTypedEvent event) {
+//		System.out.println("onJEIIngredientListOverlayPrefixKeyboardInput");
 		if (overlayAdapter.isOverlayDisplayed()) {
 			if (overlayAdapter.getTextFieldWidgets(textFieldList)) {
 				if (!textFieldList.isEmpty()) {

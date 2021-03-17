@@ -75,6 +75,7 @@ public class NativeFunctionManager
 		if(IMEName == null) {
 			return false;
 		}
+		System.out.println("switching to"+IMEName);
 		switch(nativeFunctionProvider.switchIMETo(IMEName)) {
 		case INativeFunctionProvider.RESULT_OK:
 			return true;

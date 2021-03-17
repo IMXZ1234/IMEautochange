@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Logger;
 import com.electronwill.nightconfig.core.Config;
 import com.electronwill.nightconfig.core.file.FileConfig;
 import com.imeautochange.config.ClassConfigInfo;
-import com.imeautochange.config.ConfigItem;
+import com.imeautochange.config.ClassConfigItem;
+import com.imeautochange.config.GeneralConfigItem;
 
 public class ConfigUtil {
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -24,9 +25,9 @@ public class ConfigUtil {
 			LOGGER.error("ClassConfigInfo.description: null!");
 			return false;
 		}
-		for(Entry<String, ConfigItem> entry:classConfigInfo.configItems.entrySet()) {
+		for(Entry<String, ClassConfigItem> entry:classConfigInfo.configItems.entrySet()) {
 			String configItemName = entry.getKey();
-			ConfigItem configItem = entry.getValue();
+			ClassConfigItem configItem = entry.getValue();
 			if(configItem == null || configItemName == null) {
 				LOGGER.error("configItem || configItemName: null!");
 				continue;
@@ -43,9 +44,9 @@ public class ConfigUtil {
 			LOGGER.error("ClassConfigInfo.description: null!");
 			return false;
 		}
-		for(Entry<String, ConfigItem> entry:classConfigInfo.configItems.entrySet()) {
+		for(Entry<String, ClassConfigItem> entry:classConfigInfo.configItems.entrySet()) {
 			String configItemName = entry.getKey();
-			ConfigItem configItem = entry.getValue();
+			ClassConfigItem configItem = entry.getValue();
 			if(configItem == null) {
 				LOGGER.error("configItemName: null!");
 				continue;
@@ -69,14 +70,14 @@ public class ConfigUtil {
 		}
 		return true;
 	}
-	public static void updateConfigByClassConfigInfoMap(HashMap<Class<?>, ClassConfigInfo> classConfigInfoMap, Config config) {
-		for(Map.Entry<Class<?>, ClassConfigInfo> entry : classConfigInfoMap.entrySet()) {
+	public static void updateConfigByClassConfigInfoMap(HashMap<String, ClassConfigInfo> classConfigInfoMap, Config config) {
+		for(Map.Entry<String, ClassConfigInfo> entry : classConfigInfoMap.entrySet()) {
 			updateConfigByClassConfigInfo(entry.getValue(),config);
 		}
 	}
-	public static void updateClassConfigInfoMapByConfig(HashMap<Class<?>, ClassConfigInfo> classConfigInfoMap, FileConfig fileConfig) {
+	public static void updateClassConfigInfoMapByConfig(HashMap<String, ClassConfigInfo> classConfigInfoMap, FileConfig fileConfig) {
 		Map<String, Object> configMap = fileConfig.valueMap();
-		for(Entry<Class<?>, ClassConfigInfo> classConfigInfoEntry : classConfigInfoMap.entrySet()) {
+		for(Entry<String, ClassConfigInfo> classConfigInfoEntry : classConfigInfoMap.entrySet()) {
 			ClassConfigInfo classConfigInfo = classConfigInfoEntry.getValue();
 			String classDescription = classConfigInfo.description;
 			Config classConfig = (Config)configMap.get(classDescription);
@@ -84,6 +85,21 @@ public class ConfigUtil {
 				LOGGER.error("Found ClassConfigInfo in classConfigInfoMap, but not in Config!");
 				updateClassConfigInfoByConfig(classConfigInfo, classConfig);
 			}
+		}
+	}
+	public static void updateGeneralConfigItemMapByConfig(HashMap<String, GeneralConfigItem> generalConfigItemMap, FileConfig fileConfig) {
+		for (Entry<String, GeneralConfigItem> generalConfigItemEntry : generalConfigItemMap.entrySet()) {
+			Object value = fileConfig.get(generalConfigItemEntry.getKey());
+			if(value != null) {
+				generalConfigItemEntry.getValue().value = value;
+			} else {
+				LOGGER.error("value: null!");
+			}
+		}
+	}
+	public static void updateConfigByGeneralConfigItemMap(HashMap<String, GeneralConfigItem> generalConfigItemMap, FileConfig fileConfig) {
+		for (Entry<String, GeneralConfigItem> generalConfigItemEntry : generalConfigItemMap.entrySet()) {
+			fileConfig.set(generalConfigItemEntry.getKey(), generalConfigItemEntry.getValue().value);
 		}
 	}
 }
